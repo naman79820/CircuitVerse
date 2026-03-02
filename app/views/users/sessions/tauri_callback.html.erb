@@ -1,0 +1,51 @@
+# Run this in your Rails terminal
+mkdir -p ~/CircuitVerse/app/views/users/sessions
+cat > ~/CircuitVerse/app/views/users/sessions/tauri_callback.html.erb << 'EOF'
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Opening CircuitVerse...</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #1a1a2e;
+      color: white;
+    }
+    .logo { font-size: 2rem; font-weight: bold; color: #43b984; margin-bottom: 1rem; }
+    .msg  { font-size: 1rem; color: #aaa; margin-bottom: 2rem; }
+    .btn  {
+      padding: 10px 24px;
+      background: #43b984;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">CircuitVerse</div>
+  <div class="msg">Login successful! Opening the desktop app...</div>
+  <button class="btn" onclick="openApp()">Click here if app doesn't open</button>
+
+  <script>
+    const deepLink = "circuitverse://auth?token=<%= @tauri_token %>";
+
+    function openApp() {
+      window.location.href = deepLink;
+    }
+
+    openApp();
+
+    setTimeout(() => { window.close(); }, 2000);
+  </script>
+</body>
+</html>
+EOF
