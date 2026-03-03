@@ -2,7 +2,7 @@
 
 class Api::V1::UsersController < Api::V1::BaseController
   before_action :set_user, only: %i[show update]
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: %i[me]
   before_action :check_access, only: [:update]
   before_action :set_details_access, except: %i[index me]
 
@@ -21,9 +21,10 @@ class Api::V1::UsersController < Api::V1::BaseController
 
   # GET api/v1/me
   def me
-    @options = { params: { has_details_access: true } }
-    render json: Api::V1::UserSerializer.new(current_user, @options)
-  end
+  return render json: { data: nil, isLoggedIn: false }, status: :ok unless current_user
+  @options = { params: { has_details_access: true } }
+  render json: Api::V1::UserSerializer.new(current_user, @options)
+end
 
   # PATCH api/v1/users/:id
   def update
