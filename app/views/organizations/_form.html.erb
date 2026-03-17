@@ -1,0 +1,29 @@
+<%= form_with(model: organization, local: true) do |form| %>
+  <% if organization.errors.any? %>
+    <div class="error-message">
+      <ul>
+        <% organization.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="my-3 groups-form-text-container">
+    <div class="field mb-3">
+      <h5><%= form.label :name %></h5>
+      <div class="input-group groups-input-group">
+        <%= form.text_field :name, class: "form-control form-input", autofocus: true %>
+      </div>
+    </div>
+    <div class="field mb-3">
+      <h5><%= form.label :description %></h5>
+      <div class="input-group groups-input-group">
+        <%= form.text_area :description, class: "form-control form-input", rows: 3 %>
+      </div>
+    </div>
+  </div>
+  <div class="groups-form-text-container">
+    <%= form.submit class: "btn primary-button groups-form-primary-button" %>
+    <%= link_to "Back", :back, class: "groups-form-anchor-text anchor-text" %>
+  </div>
+<% end %>

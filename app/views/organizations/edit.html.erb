@@ -1,0 +1,17 @@
+<% content_for :title, "Edit #{@organization.name}" %>
+<div class="container">
+  <div class="row center-row">
+    <div class="col col-sm col-md col-lg">
+      <h2 class="submain-heading">Edit Organization</h2>
+    </div>
+  </div>
+  <div class="row center-row">
+    <div class="col-12 col-sm-12 col-md-7 col-lg-6">
+      <div class="container">
+        <div class="center-row groups-background-card">
+          <%= render "form", organization: @organization %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

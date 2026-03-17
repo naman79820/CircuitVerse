@@ -223,6 +223,9 @@ gem "sentry-sidekiq", "~> 5.17"
 # for SAML based SSO
 gem 'devise_saml_authenticatable'
 
+# for OIDC based SSO (organization-level)
+gem 'omniauth-openid-connect'
+
 gem 'activerecord_cursor_paginate'
 
 gem 'concurrent-ruby', '1.3.5'

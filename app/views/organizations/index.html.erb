@@ -1,0 +1,42 @@
+<% content_for :title, "Organizations" %>
+<div class="container">
+  <div class="row center-row">
+    <div class="col col-sm col-md col-lg">
+      <h2 class="submain-heading">My Organizations</h2>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col">
+      <%= link_to "Create Organization", new_organization_path, class: "btn primary-button groups-primary-button" %>
+    </div>
+  </div>
+
+  <% if @organizations.empty? %>
+    <span class="null-text">You are not part of any organization yet.</span>
+  <% else %>
+    <div class="row">
+      <% @organizations.each do |org| %>
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title"><%= org.name %></h5>
+              <% if org.description.present? %>
+                <p class="card-text text-muted"><%= truncate(org.description, length: 120) %></p>
+              <% end %>
+              <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                  <%= pluralize(org.organization_members.count, "member") %> &middot;
+                  <%= pluralize(org.groups.count, "group") %>
+                </small>
+                <span class="badge bg-secondary"><%= org.role_for(current_user)&.humanize %></span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <%= link_to "View", organization_path(org), class: "btn btn-sm primary-button" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

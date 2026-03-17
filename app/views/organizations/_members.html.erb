@@ -1,0 +1,32 @@
+<% members.each do |membership| %>
+  <div class="col-12 col-md-6 col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <strong><%= membership.user.name %></strong>
+          <br>
+          <small class="text-muted"><%= membership.user.email %></small>
+        </div>
+        <span class="badge bg-<%= membership.admin? ? 'danger' : membership.group_lead? ? 'warning' : membership.instructor? ? 'info' : 'secondary' %>">
+          <%= membership.role.humanize %>
+        </span>
+      </div>
+      <% if policy(organization).manage_members? && membership.user != current_user %>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <%= form_tag update_role_organization_path(organization, member_id: membership.id), method: :patch, class: "d-inline" do %>
+            <select name="role" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
+              <% OrganizationMember.roles.each do |role_name, _| %>
+                <option value="<%= role_name %>" <%= 'selected' if membership.role == role_name %>><%= role_name.humanize %></option>
+              <% end %>
+            </select>
+          <% end %>
+          <%= link_to "Remove",
+              remove_member_organization_path(organization, member_id: membership.id),
+              method: :delete,
+              data: { confirm: "Remove #{membership.user.name} from this organization?" },
+              class: "btn btn-sm btn-outline-danger" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

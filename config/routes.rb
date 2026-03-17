@@ -35,6 +35,14 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :organizations do
+    member do
+      post :add_member
+      delete :remove_member
+      patch :update_role
+    end
+  end
+
   resources :custom_mails, except: %i[destroy]
   get "/custom_mails/send_mail/:id", to: "custom_mails#send_mail", as: "send_custom_mail"
   get "/custom_mails/send_mail_to_self/:id", to: "custom_mails#send_mail_self",
@@ -231,6 +239,7 @@ Rails.application.routes.draw do
         resources :members, controller: "group_members", shallow: true, only: %i[index create]
         resources :assignments, shallow: true
       end
+      resources :organizations, only: %i[index show create update destroy]
       resources :assignments do
         member do
           patch "reopen"

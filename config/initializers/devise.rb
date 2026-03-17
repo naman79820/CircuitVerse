@@ -34,6 +34,22 @@ Devise.setup do |config|
   }
   config.omniauth :microsoft_office365,ENV['MICROSOFT_CLIENT_ID'], ENV['MICROSOFT_CLIENT_SECRET']
 
+  # OIDC provider for institutional SSO (set via env or per-org config)
+  if ENV['OIDC_CLIENT_ID'].present? && ENV['OIDC_ISSUER'].present?
+    config.omniauth :openid_connect, {
+      name: :openid_connect,
+      scope: [:openid, :email, :profile],
+      response_type: :code,
+      client_options: {
+        identifier: ENV['OIDC_CLIENT_ID'],
+        secret: ENV['OIDC_CLIENT_SECRET'],
+        redirect_uri: "#{Rails.env.development? ? 'http://localhost:3000' : ENV['CALLBACK_ADDRESS']}/users/auth/openid_connect/callback"
+      },
+      issuer: ENV['OIDC_ISSUER'],
+      discovery: true
+    }
+  end
+
   # Load and configure the ORM. Supports :active_record (default) and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
