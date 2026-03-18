@@ -13,7 +13,8 @@
       </div>
       <% if policy(organization).manage_members? && membership.user != current_user %>
         <div class="card-footer d-flex justify-content-between align-items-center">
-          <%= form_tag update_role_organization_path(organization, member_id: membership.id), method: :patch, class: "d-inline" do %>
+          <%= form_with url: update_role_organization_path(organization, member_id: membership.id), method: :patch, local: true, data: { turbo: false }, class: "d-inline" do |f| %>
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
             <select name="role" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
               <% OrganizationMember.roles.each do |role_name, _| %>
                 <option value="<%= role_name %>" <%= 'selected' if membership.role == role_name %>><%= role_name.humanize %></option>

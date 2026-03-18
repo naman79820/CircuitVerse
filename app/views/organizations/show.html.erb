@@ -102,25 +102,20 @@
             <h5 class="modal-title">Add Member</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <%= form_tag add_member_organization_path(@organization), method: :post do %>
+          <%= form_with model: @organization_member, url: add_member_organization_path(@organization), local: true do |f| %>
             <div class="modal-body">
               <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" name="email" required>
+                <%= f.label :email, class: "form-label" %>
+                <%= f.email_field :email, name: "email", class: "form-control", required: true %>
               </div>
               <div class="mb-3">
-                <label for="role" class="form-label">Role</label>
-                <select class="form-select" name="role">
-                  <option value="member">Member</option>
-                  <option value="instructor">Instructor</option>
-                  <option value="group_lead">Group Lead</option>
-                  <option value="admin">Admin</option>
-                </select>
+                <%= f.label :role, class: "form-label" %>
+                <%= f.select :role, OrganizationMember.roles.keys.map { |r| [r.humanize, r] }, {}, { name: "role", class: "form-select" } %>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn primary-button">Add</button>
+              <%= f.submit "Add", class: "btn primary-button", data: { disable_with: "Adding..." } %>
             </div>
           <% end %>
         </div>

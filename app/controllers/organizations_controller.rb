@@ -13,6 +13,7 @@ class OrganizationsController < ApplicationController
   def show
     @members = @organization.organization_members.includes(:user)
     @groups = @organization.groups.includes(:primary_mentor)
+    @organization_member = @organization.organization_members.new
   end
 
   def new
