@@ -6,9 +6,6 @@ class CreateOrganizations < ActiveRecord::Migration[8.0]
       t.string :name, null: false
       t.string :slug, null: false
       t.text :description
-      t.string :oidc_client_id
-      t.string :oidc_client_secret
-      t.string :oidc_issuer
       t.timestamps
     end
 

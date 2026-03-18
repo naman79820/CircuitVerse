@@ -31,8 +31,4 @@ class Organization < ApplicationRecord
   def role_for(user)
     organization_members.find_by(user_id: user.id)&.role
   end
-
-  def oidc_configured?
-    oidc_client_id.present? && oidc_issuer.present?
-  end
 end

@@ -373,9 +373,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_01_000005) do
     t.string "name", null: false
     t.string "slug", null: false
     t.text "description"
-    t.string "oidc_client_id"
-    t.string "oidc_client_secret"
-    t.string "oidc_issuer"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_organizations_on_slug", unique: true

@@ -84,7 +84,7 @@ class OrganizationsController < ApplicationController
     end
 
     def organization_params
-      params.require(:organization).permit(:name, :description, :oidc_client_id, :oidc_client_secret, :oidc_issuer)
+      params.require(:organization).permit(:name, :description)
     end
 
     def check_show_access
