@@ -35,4 +35,12 @@ class OrganizationPolicy < ApplicationPolicy
   def admin_access?
     user.admin? || organization.admin?(user)
   end
+
+  def group_lead_access?
+    user.admin? || organization.group_lead?(user)
+  end
+
+  def instructor_access?
+    user.admin? || organization.instructor?(user)
+  end
 end

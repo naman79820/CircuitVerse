@@ -43,7 +43,7 @@ class GroupsController < ApplicationController
 
   # GET /groups/new
   def new
-    @group = Group.new
+    @group = Group.new(organization_id: params[:organization_id])
   end
 
   # GET /groups/1/edit
