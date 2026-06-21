@@ -7,6 +7,7 @@ class OrganizationMembersController < ApplicationController
   before_action :set_organization_member, only: %i[update destroy]
   before_action :check_create_access, only: %i[create]
   before_action :check_access, only: %i[update destroy]
+  before_action :check_index_access, only: %i[index]
 
   def index
     @organization_members = @organization.organization_members.includes(:user)
@@ -111,10 +112,6 @@ class OrganizationMembersController < ApplicationController
       @organization_member = @organization.organization_members.find(params.expect(:id))
     end
 
-    def organization_member_params
-      params.permit(organization_member: %i[user_id role emails])
-    end
-
     def organization_member_update_params
       params.expect(organization_member: [:role])
     end
@@ -131,5 +128,9 @@ class OrganizationMembersController < ApplicationController
 
     def check_access
       authorize @organization_member, :"#{action_name}?"
+    end
+
+    def check_index_access
+      authorize @organization, :show_access?
     end
 end

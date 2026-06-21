@@ -37,7 +37,7 @@ RSpec.describe OrganizationMembersController, type: :controller do
 
   describe "POST #create" do
     context "when user has admin access" do
-      let(:valid_attributes) { { user_id: target_user.id, role: "member" } }
+      let(:valid_attributes) { { emails: target_user.email, role: "member" } }
 
       it "creates a new OrganizationMember" do
         expect do
@@ -47,7 +47,7 @@ RSpec.describe OrganizationMembersController, type: :controller do
 
       it "redirects to the organization" do
         post :create, params: { organization_id: organization.id, organization_member: valid_attributes }
-        expect(response).to redirect_to(organization)
+        expect(response).to redirect_to(organization_organization_members_path(organization))
       end
     end
 
@@ -62,7 +62,7 @@ RSpec.describe OrganizationMembersController, type: :controller do
       it "returns a forbidden status" do
         post :create,
              params: { organization_id: organization.id,
-                       organization_member: { user_id: target_user.id, role: "member" } }
+                       organization_member: { emails: target_user.email, role: "member" } }
         expect(response).to have_http_status(:forbidden)
       end
     end
@@ -84,7 +84,7 @@ RSpec.describe OrganizationMembersController, type: :controller do
       it "redirects to the organization" do
         patch :update,
               params: { organization_id: organization.id, id: target_member.id, organization_member: new_attributes }
-        expect(response).to redirect_to(organization)
+        expect(response).to redirect_to(organization_organization_members_path(organization))
       end
 
       it "returns a forbidden status when demoting sole admin" do
@@ -115,7 +115,7 @@ RSpec.describe OrganizationMembersController, type: :controller do
 
       it "redirects to the organization" do
         delete :destroy, params: { organization_id: organization.id, id: target_member.id }
-        expect(response).to redirect_to(organization)
+        expect(response).to redirect_to(organization_organization_members_path(organization))
       end
     end
 

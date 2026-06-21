@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe OrganizationMemberPolicy do
-  subject { described_class }
+  subject { described_class.new(user, organization_member) }
 
   before do
     @admin = FactoryBot.create(:user)
