@@ -3,12 +3,13 @@
 require "rails_helper"
 
 describe OrganizationMemberPolicy do
-  subject { described_class.new(user, organization_member) }
+  subject { described_class }
 
   before do
-    @organization = FactoryBot.create(:organization)
     @admin = FactoryBot.create(:user)
-    @admin_membership = FactoryBot.create(:organization_member, organization: @organization, user: @admin, role: :admin)
+    @organization = FactoryBot.create(:organization)
+    @admin_membership = FactoryBot.create(:organization_member, organization: @organization, user: @admin,
+                                                                role: :admin)
   end
 
   context "when the user is a site admin" do

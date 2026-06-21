@@ -8,21 +8,57 @@ class OrganizationMembersController < ApplicationController
   before_action :check_create_access, only: %i[create]
   before_action :check_access, only: %i[update destroy]
 
+  def index
+    @organization_members = @organization.organization_members.includes(:user)
+
+    if params[:role].present? && OrganizationMember.roles.key?(params[:role])
+      @organization_members = @organization_members.where(role: params[:role])
+    end
+
+    if params[:sort] == 'newest'
+      @organization_members = @organization_members.order(created_at: :desc)
+    elsif params[:sort] == 'oldest'
+      @organization_members = @organization_members.order(created_at: :asc)
+    else
+      @organization_members = @organization_members.joins(:user).order(role: :asc, "users.name" => :asc)
+    end
+
+    @organization_members = @organization_members.paginate(page: params[:page], per_page: 15)
+  end
+
   # POST /organizations/1/organization_members
   # POST /organizations/1/organization_members.json
   def create
-    @organization_member = @organization.organization_members.new(organization_member_params)
+    emails_raw = params.dig(:organization_member, :emails).to_s
+    role       = params.dig(:organization_member, :role).presence || "member"
+
+    emails = emails_raw.split(/[,\s]+/).map(&:strip).select(&:present?)
+
+    added, not_found, already_member = [], [], []
+
+    emails.each do |email|
+      user = User.find_by(email: email)
+      if user.nil?
+        not_found << email
+      elsif @organization.organization_members.exists?(user_id: user.id)
+        already_member << email
+      else
+        @organization.organization_members.create!(user: user, role: role)
+        added << email
+      end
+    end
+
+    parts = []
+    parts << "Added #{added.size} member(s)." if added.any?
+    parts << "Not found in CircuitVerse: #{not_found.join(', ')}." if not_found.any?
+    parts << "Already a member: #{already_member.join(', ')}." if already_member.any?
+    parts << "No emails provided." if emails.empty?
+
+    notice = parts.join(" ")
 
     respond_to do |format|
-      if @organization_member.save
-        format.html { redirect_to @organization, notice: t(".success") }
-        format.json { render :show, status: :created, location: @organization }
-      else
-        format.html do
-          redirect_to @organization, alert: @organization_member.errors.full_messages.to_sentence
-        end
-        format.json { render json: @organization_member.errors, status: :unprocessable_content }
-      end
+      format.html { redirect_to organization_organization_members_path(@organization), notice: notice }
+      format.json { render json: { message: notice }, status: :created }
     end
   end
 
@@ -31,11 +67,11 @@ class OrganizationMembersController < ApplicationController
   def update
     respond_to do |format|
       if @organization_member.update(organization_member_update_params)
-        format.html { redirect_to @organization, notice: t(".success") }
+        format.html { redirect_to organization_organization_members_path(@organization), notice: t(".success") }
         format.json { head :no_content }
       else
         format.html do
-          redirect_to @organization, alert: @organization_member.errors.full_messages.to_sentence
+          redirect_to organization_organization_members_path(@organization), alert: @organization_member.errors.full_messages.to_sentence
         end
         format.json { render json: @organization_member.errors, status: :unprocessable_content }
       end
@@ -47,7 +83,7 @@ class OrganizationMembersController < ApplicationController
   def destroy
     @organization_member.destroy
     respond_to do |format|
-      format.html { redirect_to @organization, notice: t(".success") }
+      format.html { redirect_to organization_organization_members_path(@organization), notice: t(".success") }
       format.json { head :no_content }
     end
   end
@@ -68,7 +104,7 @@ class OrganizationMembersController < ApplicationController
   private
 
     def set_organization
-      @organization = Organization.find(params.expect(:organization_id))
+      @organization = Organization.friendly.find(params.expect(:organization_id))
     end
 
     def set_organization_member
@@ -76,7 +112,7 @@ class OrganizationMembersController < ApplicationController
     end
 
     def organization_member_params
-      params.expect(organization_member: %i[user_id role])
+      params.permit(organization_member: %i[user_id role emails])
     end
 
     def organization_member_update_params

@@ -3,11 +3,25 @@
 class GroupsController < ApplicationController
   before_action :set_group, only: %i[show edit update destroy group_invite generate_token]
   before_action :authenticate_user!
-  before_action :check_organizations_feature_flag, only: %i[new create], if: lambda {
+  before_action :check_organizations_feature_flag, only: %i[index new create], if: lambda {
     params[:organization_id].present? || params.dig(:group, :organization_id).present?
   }
   before_action :check_show_access, only: %i[show edit update destroy]
   before_action :check_edit_access, only: %i[edit update destroy generate_token]
+
+  # GET /organizations/:organization_id/groups
+  def index
+    if params[:organization_id].present?
+      @organization = Organization.friendly.find_by(slug: params[:organization_id]) || Organization.find_by(id: params[:organization_id])
+      if @organization.nil?
+        redirect_to root_path, alert: "Organization not found."
+        return
+      end
+      @groups = @organization.groups.paginate(page: params[:page], per_page: 15)
+    else
+      redirect_to root_path, alert: "Not found."
+    end
+  end
 
   # GET /groups/1
   # GET /groups/1.json
@@ -46,7 +60,12 @@ class GroupsController < ApplicationController
 
   # GET /groups/new
   def new
-    @group = Group.new
+    if params[:organization_id].present?
+      organization = Organization.friendly.find_by(slug: params[:organization_id]) || Organization.find_by(id: params[:organization_id])
+      @group = Group.new(organization_id: organization&.id)
+    else
+      @group = Group.new
+    end
   end
 
   # GET /groups/1/edit
@@ -57,11 +76,21 @@ class GroupsController < ApplicationController
   def create
     @group = current_user.groups_owned.new(group_params)
 
-    authorize @group.organization, :create_group? if @group.organization_id.present?
+    if @group.organization_id.present?
+      if @group.organization.nil?
+        redirect_to user_groups_path(current_user), alert: "Invalid organization."
+        return
+      end
+      authorize @group.organization, :create_group?
+    end
 
     respond_to do |format|
       if @group.save
-        format.html { redirect_to @group, notice: "Group was successfully created." }
+        if @group.organization_id.present?
+          format.html { redirect_to organization_path(@group.organization), notice: "Group was successfully created within the organization." }
+        else
+          format.html { redirect_to @group, notice: "Group was successfully created." }
+        end
         format.json { render :show, status: :created, location: @group }
       else
         format.html { render :new }
@@ -87,10 +116,15 @@ class GroupsController < ApplicationController
   # DELETE /groups/1
   # DELETE /groups/1.json
   def destroy
+    organization_id = @group.organization_id
     @group.destroy
     respond_to do |format|
       format.html do
-        redirect_to user_groups_path(current_user), notice: "Group was successfully deleted."
+        if organization_id.present?
+          redirect_to organization_path(organization_id), notice: "Group was successfully deleted."
+        else
+          redirect_to user_groups_path(current_user), notice: "Group was successfully deleted."
+        end
       end
       format.json { head :no_content }
     end

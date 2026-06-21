@@ -10,9 +10,9 @@ class OrganizationsController < ApplicationController
   # GET /organizations
   def index
     @organizations = if params[:explore].present?
-      Organization.where(private: false).paginate(page: params[:page])
+      Organization.where(private: false).paginate(page: params[:page], per_page: 9)
     else
-      current_user.organizations.paginate(page: params[:page])
+      current_user.organizations.paginate(page: params[:page], per_page: 9)
     end
   end
 
@@ -71,7 +71,7 @@ class OrganizationsController < ApplicationController
   private
 
     def set_organization
-      @organization = Organization.find(params.expect(:id))
+      @organization = Organization.friendly.find(params.expect(:id))
     end
 
     def organization_params

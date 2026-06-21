@@ -1,0 +1,290 @@
+// ------ Page wrapper / header --------------------------------
+
+.organizations-page-wrapper {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 30px 20px 60px;
+}
+
+.organizations-page-header {
+  margin-bottom: 28px;
+}
+
+.organizations-back-link {
+  align-items: center;
+  color: #42b983;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 6px;
+  margin-bottom: 16px;
+  text-decoration: none;
+
+  &:hover {
+    color: #026e57;
+    text-decoration: none;
+  }
+}
+
+.organizations-page-title {
+  color: #42b983;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.organizations-page-subtitle {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+// ------ Main card --------------------------------------------
+
+.organizations-form-card {
+  background-color: #fff;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 36px 40px 40px;
+}
+
+// ------ Error banner -----------------------------------------
+
+.organizations-error-banner {
+  align-items: flex-start;
+  background-color: #fae3e3;
+  border-radius: 6px;
+  color: #ff5959;
+  display: flex;
+  font-size: 14px;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding: 14px 16px;
+
+  i {
+    flex-shrink: 0;
+    font-size: 16px;
+    margin-top: 2px;
+  }
+}
+
+.organizations-error-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin-bottom: 4px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// ------ Section header inside card ---------------------------
+
+.organizations-form-section-header {
+  border-bottom: 1.5px solid #e5e5e5;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+}
+
+.organizations-form-section-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.organizations-form-section-subtitle {
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+// ------ Individual field -------------------------------------
+
+.organizations-field {
+  margin-bottom: 24px;
+}
+
+.organizations-field-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.organizations-field-hint {
+  color: #6b7280;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.organizations-required-asterisk {
+  color: #ff5959;
+  font-size: 13px;
+  margin-left: 3px;
+}
+
+// ------ Text input -------------------------------------------
+
+.organizations-text-input {
+  border: 1.5px solid #e5e5e5;
+  border-radius: 6px;
+  color: #111;
+  font-size: 14px;
+  padding: 10px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+
+  &:focus {
+    border-color: #42b983;
+    box-shadow: 0 0 0 3px rgba(66, 185, 131, 0.25);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+}
+
+// ------ Input with leading icon ------------------------------
+
+.organizations-input-wrapper {
+  position: relative;
+
+  .organizations-input-icon {
+    color: #9ca3af;
+    left: 13px;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .organizations-text-input--with-icon {
+    padding-left: 38px;
+  }
+}
+
+// ------ Input group (text + suffix label) --------------------
+
+.organizations-input-group {
+  display: flex;
+  width: 100%;
+
+  .organizations-input-group__field {
+    border-radius: 6px 0 0 6px;
+    border-right: 0;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .organizations-input-group__suffix {
+    align-items: center;
+    background-color: #f8fafc;
+    border: 1.5px solid #e5e5e5;
+    border-left: 0;
+    border-radius: 0 6px 6px 0;
+    color: #6b7280;
+    display: flex;
+    font-size: 13px;
+    padding: 0 12px;
+    white-space: nowrap;
+  }
+}
+
+// ------ Dynamic Links ----------------------------------------
+
+#organizations-links-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.organizations-link-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .organizations-text-input {
+    flex: 1;
+  }
+}
+
+.organizations-remove-link-btn {
+  background: none;
+  border: none;
+  color: #ff5959;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 6px;
+  transition: color 0.2s, transform 0.15s;
+
+  &:hover {
+    color: #c21d1d;
+    transform: scale(1.1);
+  }
+}
+
+.organizations-add-link-btn {
+  background: none;
+  border: 1px dashed #42b983;
+  border-radius: 6px;
+  color: #42b983;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  transition: background-color 0.2s, color 0.2s;
+  width: fit-content;
+
+  &:hover {
+    background-color: #eef7f3;
+    color: #026e57;
+  }
+}
+
+// ------ Textarea ---------------------------------------------
+
+.organizations-textarea {
+  border: 1.5px solid #e5e5e5;
+  border-radius: 6px;
+  color: #111;
+  font-size: 14px;
+  padding: 10px 14px;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+
+  &:focus {
+    border-color: #42b983;
+    box-shadow: 0 0 0 3px rgba(66, 185, 131, 0.25);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+}
+
+// ------ Select dropdown --------------------------------------
+
+.organizations-select-wrapper {
+  position: relative;
+}
+
+.organizations-select {
+  appearance: none;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 6px;
+  color: #111;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 36px 10px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+
+  background-image: url(

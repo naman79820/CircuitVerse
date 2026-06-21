@@ -9,6 +9,15 @@
     </div>
   </div>
   <% end %>
+
+  <% if @group.organization.present? %>
+    <div style="margin-top: 24px; margin-bottom: 0px;">
+      <%= link_to organization_path(@group.organization), class: "btn org-btn-outline" do %>
+        <i class="fas fa-arrow-left" style="margin-right: 6px;"></i> Back to Dashboard
+      <% end %>
+    </div>
+  <% end %>
+
   <div class="row center-row">
     <div class="col col-sm col-md col-lg">
       <h1 class="submain-heading">

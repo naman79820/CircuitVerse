@@ -27,9 +27,9 @@ Rails.application.routes.draw do
 
   # resources :assignment_submissions
   resources :organizations do
-    resources :organization_members, only: %i[create update destroy]
+    resources :organization_members, only: %i[index create update destroy]
     delete :leave, to: "organization_members#leave"
-    resources :groups, only: %i[new create]
+    resources :groups, only: %i[index new create]
   end
   resources :group_members, only: %i[create destroy update]
   resources :groups, except: %i[index] do
