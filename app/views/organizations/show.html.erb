@@ -28,6 +28,13 @@
             Manage your organization's members, groups, and settings.
           <% end %>
         </p>
+        
+        <% if @organization.location.present? %>
+          <div class="org-header-location" style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 14px; color: #6b7280;">
+            <i class="fas fa-map-marker-alt" style="color: #9ca3af;"></i>
+            <span><%= @organization.location %></span>
+          </div>
+        <% end %>
       </div>
     </div>
     

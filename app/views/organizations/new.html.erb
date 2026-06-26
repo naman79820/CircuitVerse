@@ -91,6 +91,22 @@
         </div>
       </div>
 
+      <%# Location %>
+      <div class="organizations-field">
+        <label class="organizations-field-label" for="organization_location">
+          Location
+        </label>
+        <p class="organizations-field-hint">Where is your organization based?</p>
+        <div class="organizations-input-wrapper">
+          <i class="fas fa-map-marker-alt organizations-input-icon"></i>
+          <%= form.text_field :location,
+              id: "organization_location",
+              class: "organizations-text-input organizations-text-input--with-icon",
+              placeholder: "e.g. San Francisco, CA",
+              maxlength: 100 %>
+        </div>
+      </div>
+
       <%# Visibility %>
       <div class="organizations-field">
         <%= form.label :private, t("organizations.new.visibility_label"), class: "organizations-field-label" %>
