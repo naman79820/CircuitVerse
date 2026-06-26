@@ -49,25 +49,26 @@
               class: "organizations-text-input organizations-text-input--with-icon",
               placeholder: t("organizations.new.name_placeholder"),
               autofocus: true,
-              required: true %>
+              required: true,
+              maxlength: 50 %>
+        </div>
+        <div style="text-align: right; margin-top: 6px;">
+          <span id="org-name-counter" style="font-size: 12px; color: #6b7280; font-weight: 500;">
+            50 characters remaining
+          </span>
         </div>
       </div>
 
-      <%# Organization URL / Slug %>
+      <%# Organization URL / Slug Preview %>
       <div class="organizations-field">
-        <label class="organizations-field-label" for="organization_slug">
-          <%= t("organizations.new.slug_label") %>
-          <span class="organizations-required-asterisk" aria-hidden="true">*</span>
+        <label class="organizations-field-label">
+          Organization URL
         </label>
-        <p class="organizations-field-hint"><%= t("organizations.new.slug_hint") %></p>
-        <div class="organizations-input-group">
-          <%= form.text_field :slug,
-              id: "organization_slug",
-              class: "organizations-text-input organizations-input-group__field",
-              placeholder: t("organizations.new.slug_placeholder"),
-              required: true %>
-          <span class="organizations-input-group__suffix">circuitverse.org/organizations/</span>
+        <div class="organizations-url-preview" id="org-slug-preview-box" style="display: flex; align-items: center; gap: 4px; padding: 10px 14px; background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; color: #6b7280; margin-top: 8px; flex-wrap: wrap;">
+          <span>circuitverse.org/organizations/</span><span id="organization-slug-preview" style="color: #9ca3af;">your-org-name</span>
+          <span id="org-slug-status" style="display: none; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 12px;"></span>
         </div>
+        <p id="org-slug-hint" class="organizations-field-hint" style="margin-top: 6px; display: none;"></p>
       </div>
 
       <%# Description %>
@@ -238,13 +239,43 @@
       addLinkBtn.style.display = items.length >= MAX_LINKS ? "none" : "inline-block";
     }
 
+    function updateLinkIcon(input) {
+      const url = input.value.toLowerCase();
+      const icon = input.closest(".organizations-link-item").querySelector(".organizations-input-icon");
+      
+      if (!icon) return;
+      
+      icon.className = "organizations-input-icon"; // reset base class
+      
+      if (url.includes("github.com")) icon.classList.add("fab", "fa-github");
+      else if (url.includes("instagram.com")) icon.classList.add("fab", "fa-instagram");
+      else if (url.includes("twitter.com") || url.includes("x.com")) icon.classList.add("custom-icon-x");
+      else if (url.includes("linkedin.com")) icon.classList.add("fab", "fa-linkedin");
+      else if (url.includes("youtube.com") || url.includes("youtu.be")) icon.classList.add("fab", "fa-youtube");
+      else if (url.includes("discord.com") || url.includes("discord.gg")) icon.classList.add("fab", "fa-discord");
+      else if (url.includes("facebook.com")) icon.classList.add("fab", "fa-facebook");
+      else if (url.includes("slack.com")) icon.classList.add("fab", "fa-slack");
+      else icon.classList.add("fas", "fa-link");
+    }
+
+    linksContainer.addEventListener("input", function (e) {
+      if (e.target.tagName === "INPUT" && e.target.type === "url") {
+        updateLinkIcon(e.target);
+      }
+    });
+
+    // Run on load for existing inputs
+    linksContainer.querySelectorAll('input[type="url"]').forEach(updateLinkIcon);
+
     addLinkBtn.addEventListener("click", function () {
       const items = linksContainer.querySelectorAll(".organizations-link-item");
       if (items.length < MAX_LINKS) {
         const newItem = items[0].cloneNode(true);
-        newItem.querySelector("input").value = "";
+        const input = newItem.querySelector("input");
+        input.value = "";
         linksContainer.appendChild(newItem);
         updateRemoveButtons();
+        updateLinkIcon(input); // Reset icon
       }
     });
 
@@ -259,25 +290,106 @@
       }
     });
 
-    // --- Description Character Counter Logic ---
-    const descriptionInput = document.getElementById("org-description-input");
-    const descriptionCounter = document.getElementById("org-description-counter");
-    const maxLength = 160;
+    // --- Character Counter Helper ---
+    function setupCounter(inputId, counterId, maxLen) {
+      const input = document.getElementById(inputId);
+      const counter = document.getElementById(counterId);
 
-    if (descriptionInput && descriptionCounter) {
-      const updateCounter = () => {
-        const remaining = maxLength - descriptionInput.value.length;
-        descriptionCounter.textContent = `${remaining} characters remaining`;
+      if (input && counter) {
+        const updateCounter = () => {
+          const remaining = maxLen - input.value.length;
+          counter.textContent = `${remaining} characters remaining`;
+          
+          if (remaining <= Math.floor(maxLen * 0.15)) {
+            counter.style.color = "#ff5959"; // primary red
+          } else {
+            counter.style.color = "#6b7280"; // gray
+          }
+        };
         
-        if (remaining <= 20) {
-          descriptionCounter.style.color = "#ff5959"; // primary red
-        } else {
-          descriptionCounter.style.color = "#6b7280"; // gray
+        updateCounter(); // run once on load
+        input.addEventListener("input", updateCounter);
+      }
+    }
+
+    // Initialize Counters
+    setupCounter("organization_name", "org-name-counter", 50);
+    setupCounter("org-description-input", "org-description-counter", 160);
+
+    // --- Slug Preview + Availability Check Logic ---
+    const nameInput = document.getElementById('organization_name');
+    const slugPreview = document.getElementById('organization-slug-preview');
+    const slugStatus = document.getElementById('org-slug-status');
+    const slugHint   = document.getElementById('org-slug-hint');
+    const slugBox    = document.getElementById('org-slug-preview-box');
+
+    let slugDebounce = null;
+
+    function setSlugStatus(state, slug) {
+      if (state === 'idle') {
+        slugStatus.style.display = 'none';
+        slugHint.style.display = 'none';
+        slugBox.style.borderColor = '#e5e7eb';
+        slugPreview.style.color = slugPreview.textContent === 'your-org-name' ? '#9ca3af' : '#111827';
+      } else if (state === 'checking') {
+        slugStatus.style.display = 'inline-block';
+        slugStatus.textContent = 'Checking...';
+        slugStatus.style.background = '#f3f4f6';
+        slugStatus.style.color = '#6b7280';
+        slugHint.style.display = 'none';
+        slugBox.style.borderColor = '#e5e7eb';
+        slugPreview.style.color = '#111827';
+      } else if (state === 'available') {
+        slugStatus.style.display = 'inline-block';
+        slugStatus.textContent = '✓ Available';
+        slugStatus.style.background = '#d1fae5';
+        slugStatus.style.color = '#065f46';
+        slugBox.style.borderColor = '#34d399';
+        slugPreview.style.color = '#065f46';
+        slugHint.style.display = 'none';
+      } else if (state === 'taken') {
+        slugStatus.style.display = 'inline-block';
+        slugStatus.textContent = '✗ Already taken';
+        slugStatus.style.background = '#fee2e2';
+        slugStatus.style.color = '#991b1b';
+        slugBox.style.borderColor = '#f87171';
+        slugPreview.style.color = '#991b1b';
+        slugHint.style.display = 'block';
+        slugHint.style.color = '#991b1b';
+        slugHint.textContent = 'This URL is taken. FriendlyId will append a unique number (e.g. ' + slug + '-1) when you save.';
+      }
+    }
+
+    if (nameInput && slugPreview) {
+      nameInput.addEventListener('input', function() {
+        const rawName = nameInput.value.trim();
+        if (!rawName) {
+          slugPreview.textContent = 'your-org-name';
+          setSlugStatus('idle', '');
+          return;
         }
-      };
-      
-      updateCounter(); // run once on load
-      descriptionInput.addEventListener("input", updateCounter);
+
+        // Optimistic local preview while we wait for the server
+        const localSlug = rawName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        slugPreview.textContent = localSlug || 'your-org-name';
+        setSlugStatus('checking', localSlug);
+
+        clearTimeout(slugDebounce);
+        slugDebounce = setTimeout(function() {
+          fetch('/organizations/check_slug?name=' + encodeURIComponent(rawName), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+          })
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            slugPreview.textContent = data.slug || 'your-org-name';
+            setSlugStatus(data.available ? 'available' : 'taken', data.slug);
+          })
+          .catch(function() {
+            // Silently fail - user can still submit the form
+            setSlugStatus('idle', '');
+          });
+        }, 350);
+      });
     }
   })();
 </script>

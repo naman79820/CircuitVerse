@@ -160,15 +160,39 @@
 
   .organizations-input-icon {
     color: #9ca3af;
-    left: 13px;
+    left: 14px;
     pointer-events: none;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    font-size: 16px;
+
+    &.fa-youtube { color: #ff0000; }
+    &.fa-github { color: #24292e; }
+    &.fa-instagram { color: #e1306c; }
+    &.fa-linkedin { color: #0a66c2; }
+    &.fa-discord { color: #5865F2; }
+    &.fa-facebook { color: #1877f2; }
+    &.fa-slack { color: #e01e5a; }
+  }
+
+  .custom-icon-x {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: image-url('logos/twitter-x.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
   }
 
   .organizations-text-input--with-icon {
-    padding-left: 38px;
+    padding-left: 40px;
   }
 }
 
@@ -1069,25 +1093,35 @@
   width: 100%;
   text-decoration: none;
 
-  .org-link-number {
+  .org-link-icon-wrapper {
     align-items: center;
-    background-color: #f3f4f6;
+    background-color: transparent;
     border-radius: 50%;
     color: #4b5563;
     display: flex;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 20px;
     height: 36px;
     justify-content: center;
     width: 36px;
-    flex-shrink: 0;
-  }
 
-  &:nth-child(1) .org-link-number { background-color: #dbeafe; color: #1d4ed8; }
-  &:nth-child(2) .org-link-number { background-color: #fef3c7; color: #b45309; }
-  &:nth-child(3) .org-link-number { background-color: #d1fae5; color: #047857; }
-  &:nth-child(4) .org-link-number { background-color: #f3e8ff; color: #7e22ce; }
-  &:nth-child(5) .org-link-number { background-color: #e0e7ff; color: #4338ca; }
+    .fa-youtube { color: #ff0000; }
+    .fa-github { color: #24292e; }
+    .fa-instagram { color: #e1306c; }
+    .fa-linkedin { color: #0a66c2; }
+    .fa-discord { color: #5865F2; }
+    .fa-facebook { color: #1877f2; }
+    .fa-slack { color: #e01e5a; }
+
+    & .custom-icon-x {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background-image: image-url('logos/twitter-x.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+  }
 
   .org-link-text {
     flex: 1;
@@ -1356,7 +1390,7 @@
   background-color: #fff;
   border: 1px solid #d1d5db;
   color: #374151;
-  padding: 8px 16px;
+  padding: 9px 19px; /* Matches 10px 20px of primary btn minus 1px border */
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
@@ -1388,25 +1422,22 @@
   font-size: 12px;
   font-weight: 600;
   gap: 6px;
+  background-color: #f3f4f6;
 
   &.org-badge-admin {
-    background-color: #fee2e2;
-    color: #b91c1c;
+    color: #dc2626;
   }
 
   &.org-badge-mentor {
-    background-color: #d1fae5;
-    color: #047857;
+    color: #059669;
   }
 
   &.org-badge-member {
-    background-color: #dbeafe;
-    color: #1d4ed8;
+    color: #4b5563;
   }
 
   &.org-badge-student {
-    background-color: #fef3c7;
-    color: #b45309;
+    color: #d97706;
   }
 }
 

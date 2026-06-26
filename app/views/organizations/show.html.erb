@@ -122,6 +122,10 @@
         <% if @organization.organization_members.empty? %>
           <p class="org-empty-state"><%= t("organizations.show.no_members") %></p>
         <% else %>
+          <div style="display: flex; justify-content: space-between; padding: 0 4px 8px; border-bottom: 1px solid #f3f4f6; margin-bottom: 8px; color: #9ca3af; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+            <span>User</span>
+            <span>Role</span>
+          </div>
           <% @organization.organization_members.includes(:user).order(created_at: :desc).limit(5).each do |membership| %>
             <div class="org-member-item">
               <div class="org-member-item-left">
@@ -144,13 +148,6 @@
               </div>
               <div class="org-member-item-right">
                 <span class="org-badge org-badge-<%= membership.role %>">
-                  <% if membership.role == 'admin' %>
-                    <i class="fas fa-crown"></i>
-                  <% elsif membership.role == 'mentor' %>
-                    <i class="fas fa-chalkboard-teacher"></i>
-                  <% else %>
-                    <i class="fas fa-user"></i>
-                  <% end %>
                   <%= membership.role.titleize %>
                 </span>
               </div>
@@ -221,10 +218,12 @@
     <div class="org-links-section">
       <h3 class="org-links-title">Featured Links</h3>
       <div class="org-links-list">
-        <% @organization.links.reject(&:blank?).each_with_index do |link, index| %>
+        <% @organization.links.reject(&:blank?).each do |link| %>
           <%= link_to link, target: "_blank", rel: "noopener noreferrer", class: "org-link-pill" do %>
-            <div class="org-link-number"><%= index + 1 %></div>
-            <span class="org-link-text"><%= link %></span>
+            <div class="org-link-icon-wrapper">
+              <i class="<%= icon_for_url(link) %>"></i>
+            </div>
+            <span class="org-link-text"><%= format_url_text(link) %></span>
             <i class="fas fa-arrow-right org-link-arrow"></i>
           <% end %>
         <% end %>

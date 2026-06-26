@@ -10,9 +10,9 @@ class OrganizationsController < ApplicationController
   # GET /organizations
   def index
     @organizations = if params[:explore].present?
-      Organization.where(private: false).paginate(page: params[:page], per_page: 9)
+      Organization.where(private: false).order(created_at: :desc).paginate(page: params[:page], per_page: 9)
     else
-      current_user.organizations.paginate(page: params[:page], per_page: 9)
+      current_user.organizations.order(created_at: :desc).paginate(page: params[:page], per_page: 9)
     end
   end
 
@@ -22,6 +22,15 @@ class OrganizationsController < ApplicationController
   # GET /organizations/new
   def new
     @organization = Organization.new
+  end
+
+  # GET /organizations/check_slug
+  def check_slug
+    name = params[:name].to_s.strip
+    base_slug = name.parameterize
+    is_taken = base_slug.present? && Organization.exists?(slug: base_slug)
+
+    render json: { slug: base_slug, available: base_slug.present? && !is_taken }
   end
 
   # GET /organizations/1/edit
@@ -75,7 +84,7 @@ class OrganizationsController < ApplicationController
     end
 
     def organization_params
-      params.expect(organization: [:name, :slug, :description, :location, :private, :logo, :remove_logo, { links: [] }])
+      params.expect(organization: [:name, :description, :location, :private, :logo, :remove_logo, { links: [] }])
     end
 
     def check_organizations_feature_flag

@@ -9,40 +9,42 @@
 
   <div class="org-table-container">
     <div class="org-table-header" style="flex-wrap: wrap; gap: 16px;">
-      <h1>All Members</h1>
+      <h1 style="margin: 0;">All Members</h1>
 
-      <div class="dropdown org-filters-dropdown">
-        <button class="org-filter-btn dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-filter"></i> Filter &amp; Sort
-        </button>
-        <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="filterDropdown" style="width: 250px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-          <%= form_with url: organization_organization_members_path(@organization), method: :get, local: true do |f| %>
-            <div class="mb-3">
-              <%= f.label :role, "Filter by Role", class: "form-label fw-bold", style: "font-size: 14px;" %>
-              <%= f.select :role,
-                  options_for_select([['All Roles', ''], ['Admin', 'admin'], ['Mentor', 'mentor'], ['Member', 'member']], params[:role]),
-                  {},
-                  class: "form-select form-control", style: "font-size: 14px;" %>
-            </div>
+      <div style="display: flex; gap: 16px; align-items: center; margin-left: auto;">
+        <div class="dropdown org-filters-dropdown">
+          <button class="org-filter-btn dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-filter"></i> Filter &amp; Sort
+          </button>
+          <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="filterDropdown" style="width: 250px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <%= form_with url: organization_organization_members_path(@organization), method: :get, local: true do |f| %>
+              <div class="mb-3">
+                <%= f.label :role, "Filter by Role", class: "form-label fw-bold", style: "font-size: 14px;" %>
+                <%= f.select :role,
+                    options_for_select([['All Roles', ''], ['Admin', 'admin'], ['Mentor', 'mentor'], ['Member', 'member']], params[:role]),
+                    {},
+                    class: "form-select form-control", style: "font-size: 14px;" %>
+              </div>
 
-            <div class="mb-3">
-              <%= f.label :sort, "Sort by", class: "form-label fw-bold", style: "font-size: 14px;" %>
-              <%= f.select :sort,
-                  options_for_select([['Role & Name', ''], ['Newest', 'newest'], ['Oldest', 'oldest']], params[:sort]),
-                  {},
-                  class: "form-select form-control", style: "font-size: 14px;" %>
-            </div>
+              <div class="mb-3">
+                <%= f.label :sort, "Sort by", class: "form-label fw-bold", style: "font-size: 14px;" %>
+                <%= f.select :sort,
+                    options_for_select([['Role & Name', ''], ['Newest', 'newest'], ['Oldest', 'oldest']], params[:sort]),
+                    {},
+                    class: "form-select form-control", style: "font-size: 14px;" %>
+              </div>
 
-            <button type="submit" class="btn btn-primary w-100" style="font-size: 14px;">Apply</button>
-          <% end %>
+              <button type="submit" class="btn btn-primary w-100" style="font-size: 14px;">Apply</button>
+            <% end %>
+          </div>
         </div>
-      </div>
 
-      <% if policy(@organization).admin_access? %>
-        <button class="btn org-btn-primary" onclick="openAddMemberModal()" style="display:inline-flex; align-items:center; gap:8px;">
-          <i class="fas fa-user-plus"></i> Add Member
-        </button>
-      <% end %>
+        <% if policy(@organization).admin_access? %>
+          <button class="btn org-btn-primary" onclick="openAddMemberModal()" style="display:inline-flex; align-items:center; gap:8px;">
+            <i class="fas fa-user-plus"></i> Add Member
+          </button>
+        <% end %>
+      </div>
     </div>
 
     <div class="org-table-wrapper">
@@ -88,13 +90,6 @@
                 <td><%= membership.user.email %></td>
                 <td>
                   <span class="org-badge org-badge-<%= membership.role %>">
-                    <% if membership.role == 'admin' %>
-                      <i class="fas fa-crown"></i>
-                    <% elsif membership.role == 'mentor' %>
-                      <i class="fas fa-chalkboard-teacher"></i>
-                    <% else %>
-                      <i class="fas fa-user"></i>
-                    <% end %>
                     <%= membership.role.titleize %>
                   </span>
                 </td>
@@ -225,7 +220,6 @@
     var roleColors = { admin: "org-badge-admin", mentor: "org-badge-mentor", member: "org-badge-member" };
     document.getElementById("modalCurrentRoleBadge").innerHTML =
       '<span class="org-badge ' + roleColors[memberRole] + '">' +
-      '<i class="fas ' + roleIcons[memberRole] + '"></i> ' +
       memberRole.charAt(0).toUpperCase() + memberRole.slice(1) + '</span>';
 
     // Role buttons — highlight current

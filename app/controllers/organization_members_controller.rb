@@ -6,7 +6,8 @@ class OrganizationMembersController < ApplicationController
   before_action :set_organization
   before_action :set_organization_member, only: %i[update destroy]
   before_action :check_create_access, only: %i[create]
-  before_action :check_access, only: %i[update destroy]
+  before_action :check_update_access, only: %i[update]
+  before_action :check_destroy_access, only: %i[destroy]
   before_action :check_index_access, only: %i[index]
 
   def index
@@ -126,8 +127,12 @@ class OrganizationMembersController < ApplicationController
       authorize @organization, :admin_access?
     end
 
-    def check_access
-      authorize @organization_member, :"#{action_name}?"
+    def check_update_access
+      authorize @organization_member, :update?
+    end
+
+    def check_destroy_access
+      authorize @organization_member, :destroy?
     end
 
     def check_index_access
