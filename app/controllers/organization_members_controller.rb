@@ -17,12 +17,12 @@ class OrganizationMembersController < ApplicationController
       @organization_members = @organization_members.where(role: params[:role])
     end
 
-    if params[:sort] == 'newest'
-      @organization_members = @organization_members.order(created_at: :desc)
-    elsif params[:sort] == 'oldest'
-      @organization_members = @organization_members.order(created_at: :asc)
+    @organization_members = if params[:sort] == "newest"
+      @organization_members.order(created_at: :desc)
+    elsif params[:sort] == "oldest"
+      @organization_members.order(created_at: :asc)
     else
-      @organization_members = @organization_members.joins(:user).order(role: :asc, "users.name" => :asc)
+      @organization_members.joins(:user).order(role: :asc, "users.name" => :asc)
     end
 
     @organization_members = @organization_members.paginate(page: params[:page], per_page: 15)
@@ -31,32 +31,8 @@ class OrganizationMembersController < ApplicationController
   # POST /organizations/1/organization_members
   # POST /organizations/1/organization_members.json
   def create
-    emails_raw = params.dig(:organization_member, :emails).to_s
-    role       = params.dig(:organization_member, :role).presence || "member"
-
-    emails = emails_raw.split(/[,\s]+/).map(&:strip).select(&:present?)
-
-    added, not_found, already_member = [], [], []
-
-    emails.each do |email|
-      user = User.find_by(email: email)
-      if user.nil?
-        not_found << email
-      elsif @organization.organization_members.exists?(user_id: user.id)
-        already_member << email
-      else
-        @organization.organization_members.create!(user: user, role: role)
-        added << email
-      end
-    end
-
-    parts = []
-    parts << "Added #{added.size} member(s)." if added.any?
-    parts << "Not found in CircuitVerse: #{not_found.join(', ')}." if not_found.any?
-    parts << "Already a member: #{already_member.join(', ')}." if already_member.any?
-    parts << "No emails provided." if emails.empty?
-
-    notice = parts.join(" ")
+    role   = params.dig(:organization_member, :role).presence || "member"
+    notice = process_member_emails(role)
 
     respond_to do |format|
       format.html { redirect_to organization_organization_members_path(@organization), notice: notice }
@@ -73,7 +49,8 @@ class OrganizationMembersController < ApplicationController
         format.json { head :no_content }
       else
         format.html do
-          redirect_to organization_organization_members_path(@organization), alert: @organization_member.errors.full_messages.to_sentence
+          redirect_to organization_organization_members_path(@organization),
+                      alert: @organization_member.errors.full_messages.to_sentence
         end
         format.json { render json: @organization_member.errors, status: :unprocessable_content }
       end
@@ -115,6 +92,42 @@ class OrganizationMembersController < ApplicationController
 
     def organization_member_update_params
       params.expect(organization_member: [:role])
+    end
+
+    def process_member_emails(role)
+      emails_raw = params.dig(:organization_member, :emails).to_s
+      emails = emails_raw.split(/[,\s]+/).map(&:strip).compact_blank
+      added, not_found, already_member = categorize_emails(emails, role)
+      build_notice(added, not_found, already_member, emails)
+    end
+
+    def categorize_emails(emails, role)
+      added = []
+      not_found = []
+      already_member = []
+
+      emails.each do |email|
+        user = User.find_by(email: email)
+        if user.nil?
+          not_found << email
+        elsif @organization.organization_members.exists?(user_id: user.id)
+          already_member << email
+        else
+          @organization.organization_members.create!(user: user, role: role)
+          added << email
+        end
+      end
+
+      [added, not_found, already_member]
+    end
+
+    def build_notice(added, not_found, already_member, emails)
+      parts = []
+      parts << "Added #{added.size} member(s)." if added.any?
+      parts << "Not found in CircuitVerse: #{not_found.join(', ')}." if not_found.any?
+      parts << "Already a member: #{already_member.join(', ')}." if already_member.any?
+      parts << "No emails provided." if emails.empty?
+      parts.join(" ")
     end
 
     def check_organizations_feature_flag

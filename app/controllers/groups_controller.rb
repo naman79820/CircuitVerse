@@ -12,7 +12,7 @@ class GroupsController < ApplicationController
   # GET /organizations/:organization_id/groups
   def index
     if params[:organization_id].present?
-      @organization = Organization.friendly.find_by(slug: params[:organization_id]) || Organization.find_by(id: params[:organization_id])
+      @organization = find_organization_by_param(params[:organization_id])
       if @organization.nil?
         redirect_to root_path, alert: "Organization not found."
         return
@@ -61,7 +61,7 @@ class GroupsController < ApplicationController
   # GET /groups/new
   def new
     if params[:organization_id].present?
-      organization = Organization.friendly.find_by(slug: params[:organization_id]) || Organization.find_by(id: params[:organization_id])
+      organization = find_organization_by_param(params[:organization_id])
       @group = Group.new(organization_id: organization&.id)
     else
       @group = Group.new
@@ -75,22 +75,11 @@ class GroupsController < ApplicationController
   # POST /groups.json
   def create
     @group = current_user.groups_owned.new(group_params)
-
-    if @group.organization_id.present?
-      if @group.organization.nil?
-        redirect_to user_groups_path(current_user), alert: "Invalid organization."
-        return
-      end
-      authorize @group.organization, :create_group?
-    end
+    return if org_group_invalid?
 
     respond_to do |format|
       if @group.save
-        if @group.organization_id.present?
-          format.html { redirect_to organization_path(@group.organization), notice: "Group was successfully created within the organization." }
-        else
-          format.html { redirect_to @group, notice: "Group was successfully created." }
-        end
+        format.html { redirect_to_after_group_create }
         format.json { render :show, status: :created, location: @group }
       else
         format.html { render :new }
@@ -160,5 +149,30 @@ class GroupsController < ApplicationController
 
     def check_organizations_feature_flag
       redirect_to root_path, alert: t("feature_not_available") unless Flipper.enabled?(:organizations, current_user)
+    end
+
+    def find_organization_by_param(param)
+      Organization.friendly.find_by(slug: param) ||
+        Organization.find_by(id: param)
+    end
+
+    def org_group_invalid?
+      return false if @group.organization_id.blank?
+
+      if @group.organization.nil?
+        redirect_to user_groups_path(current_user), alert: "Invalid organization."
+        return true
+      end
+      authorize @group.organization, :create_group?
+      false
+    end
+
+    def redirect_to_after_group_create
+      if @group.organization_id.present?
+        redirect_to organization_path(@group.organization),
+                    notice: "Group was successfully created within the organization."
+      else
+        redirect_to @group, notice: "Group was successfully created."
+      end
     end
 end
