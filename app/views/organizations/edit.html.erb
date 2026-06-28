@@ -206,7 +206,7 @@
 
   <%# Danger Zone - Delete Organization %>
   <% if policy(@organization).destroy? %>
-    <div class="organizations-form-card" style="margin-top: 24px; border-color: #ff5959; background-color: #fffafaf;">
+    <div class="organizations-form-card" style="margin-top: 24px; border-color: #ff5959; background-color: #fffafa;">
       <div class="organizations-form-section-header" style="border-bottom-color: #fca5a5;">
         <h2 class="organizations-form-section-title" style="color: #ff5959;">Danger Zone</h2>
         <p class="organizations-form-section-subtitle">Irreversible actions for this organization.</p>
@@ -238,7 +238,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="padding: 24px;">
-        <div style="background-color: #fffafaf; border-left: 4px solid #ef4444; padding: 12px 16px; margin-bottom: 20px; font-size: 14px; color: #374151;">
+        <div style="background-color: #fffafa; border-left: 4px solid #ef4444; padding: 12px 16px; margin-bottom: 20px; font-size: 14px; color: #374151;">
           This action <strong>cannot</strong> be undone. This will permanently delete the <strong><%= @organization.name %></strong> organization. Any groups inside this organization will not be deleted, but will become standard standalone groups.
         </div>
         
