@@ -17,7 +17,21 @@ class OrganizationsController < ApplicationController
   end
 
   # GET /organizations/1
-  def show; end
+  def show
+    @groups = @organization.groups.order(created_at: :desc).paginate(page: params[:groups_page], per_page: 9)
+    
+    @members = @organization.organization_members.includes(:user)
+    
+    if params[:role].present? && OrganizationMember.roles.key?(params[:role])
+      @members = @members.where(role: params[:role])
+    end
+    
+    if params[:q].present?
+      @members = @members.joins(:user).where("users.name ILIKE ?", "%#{params[:q]}%")
+    end
+    
+    @members = @members.joins(:user).order(role: :asc, "users.name" => :asc).paginate(page: params[:members_page], per_page: 10)
+  end
 
   # GET /organizations/new
   def new
