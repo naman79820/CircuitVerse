@@ -14,8 +14,7 @@ default_flipper_features = {
   active_storage_s3: true,
   contests: false,
   circuit_explore_page: false,
-  yosys_local_gem: false,
-  organizations: false
+  yosys_local_gem: false
 }
 
 Flipper.configure do |config|
