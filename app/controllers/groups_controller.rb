@@ -57,7 +57,7 @@ class GroupsController < ApplicationController
   def create
     @group = current_user.groups_owned.new(group_params)
 
-    authorize @group.organization, :create_group? if @group.organization_id.present?
+    authorize @group.organization, :create_group? if @group.organization
 
     respond_to do |format|
       if @group.save
@@ -105,11 +105,9 @@ class GroupsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def group_params
-      if action_name == "create"
-        params.expect(group: %i[name primary_mentor_id organization_id])
-      else
-        params.expect(group: %i[name primary_mentor_id])
-      end
+      permitted = %i[name primary_mentor_id]
+      permitted << :organization_id if action_name == "create" && Flipper.enabled?(:organizations, current_user)
+      params.expect(group: permitted)
     end
 
     def check_show_access
