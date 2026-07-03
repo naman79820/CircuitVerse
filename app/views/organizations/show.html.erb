@@ -195,32 +195,51 @@
     const tabBtns = document.querySelectorAll('.org-tab-btn[data-tab-target]');
     const tabPanes = document.querySelectorAll('.org-tab-pane');
 
-    function activateTab(targetId) {
+    function activateTab(targetId, updateUrl = true) {
       tabBtns.forEach(b => b.classList.remove('active'));
       tabPanes.forEach(p => p.classList.remove('active'));
 
       const btn = document.querySelector(`.org-tab-btn[data-tab-target="${targetId}"]`);
       const pane = document.getElementById('tab-' + targetId);
-
       if (btn) btn.classList.add('active');
       if (pane) pane.classList.add('active');
+
+      if (updateUrl) {
+        const url = new URL(window.location);
+        if (targetId === 'members') {
+          url.searchParams.set('tab', 'members');
+          url.searchParams.delete('groups_page');
+        } else {
+          // groups is the default tab -> keep the URL clean (no ?tab=)
+          url.searchParams.delete('tab');
+          url.searchParams.delete('members_page');
+          url.searchParams.delete('q');
+          url.searchParams.delete('role');
+        }
+        window.history.pushState({ tab: targetId }, '', url);
+      }
     }
 
     tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        activateTab(btn.getAttribute('data-tab-target'));
-      });
+      btn.addEventListener('click', () => activateTab(btn.getAttribute('data-tab-target')));
     });
 
-    // On load, check URL params to open the right tab
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('members_page') || urlParams.has('q') || urlParams.has('role')) {
-      activateTab('members');
-    } else if (urlParams.has('groups_page')) {
-      activateTab('groups');
+    // Which tab does the current URL point at?
+    function tabFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('tab') === 'members' || params.has('members_page') || params.has('q') || params.has('role')) {
+        return 'members';
+      }
+      return 'groups';
     }
 
-    // Live Search Logic
+    // On load: open the right tab WITHOUT pushing a redundant history entry
+    activateTab(tabFromUrl(), false);
+
+    // Back/forward buttons move between tabs
+    window.addEventListener('popstate', () => activateTab(tabFromUrl(), false));
+
+    // ---- Live member search (unchanged behavior) ----
     const searchForm = document.querySelector('.org-search-form');
     const searchInput = document.querySelector('.org-search-input');
     const roleSelect = document.querySelector('.org-filter-select');
@@ -230,7 +249,6 @@
       const url = new URL(searchForm.action);
       url.searchParams.set('q', searchInput.value);
       url.searchParams.set('role', roleSelect.value);
-      // Ensure we stay on members tab when pagination link is clicked later
       url.searchParams.set('tab', 'members');
 
       fetch(url, { headers: { 'Accept': 'text/html' } })
@@ -241,14 +259,12 @@
 
           const newMembersList = doc.querySelector('.org-members-list-full');
           const newPagination = doc.querySelector('#tab-members .org-index-pagination');
-
           const currentMembersList = document.querySelector('.org-members-list-full');
           const currentPagination = document.querySelector('#tab-members .org-index-pagination');
 
           if (currentMembersList && newMembersList) {
             currentMembersList.innerHTML = newMembersList.innerHTML;
           }
-
           if (currentPagination && newPagination) {
             currentPagination.innerHTML = newPagination.innerHTML;
           } else if (currentPagination && !newPagination) {
@@ -266,11 +282,9 @@
           debounceTimeout = setTimeout(fetchResults, 300);
         });
       }
-
       if (roleSelect) {
         roleSelect.addEventListener('change', fetchResults);
       }
-
       searchForm.addEventListener('submit', (e) => {
         e.preventDefault();
         fetchResults();
