@@ -16,3 +16,4 @@ en:
       success: "Member was successfully removed."
     leave:
       success: "You have successfully left the organization."
+      not_a_member: "You are not a member of this organization."
