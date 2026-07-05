@@ -19,9 +19,9 @@
       <% if @organization.errors.any? %>
         <div class="organizations-error-banner" role="alert">
           <i class="fas fa-exclamation-circle"></i>
-          <ul class="organizations-error-list" role="list">
+          <ul class="organizations-error-list">
             <% @organization.errors.full_messages.each do |message| %>
-              <li role="listitem"><%= message %></li>
+              <li><%= message %></li>
             <% end %>
           </ul>
         </div>
@@ -70,7 +70,7 @@
 
       <%# Description %>
       <div class="organizations-field">
-        <%= form.label :description, class: "organizations-field-label" do %>
+        <%= form.label :description, class: "organizations-field-label", for: "org-description-input" do %>
           <%= t("organizations.new.description_label") %>
         <% end %>
         <p class="organizations-field-hint"><%= t("organizations.new.description_hint") %></p>
@@ -166,7 +166,7 @@
              role="button"
              tabindex="0"
              onclick="document.getElementById('organization_logo').click()"
-             onkeydown="if(event.key==='Enter')this.click()">
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
           <div class="organizations-upload-zone__content">
             <i class="fas fa-cloud-upload-alt organizations-upload-zone__icon"></i>
             <p class="organizations-upload-zone__text">
@@ -216,7 +216,8 @@
   <% end %>
 </div>
 
-<%# ── Delete Organization Modal (Bootstrap) ───────────────────────── %>
+<%# ── Delete Organization Modal (Bootstrap) — only rendered for users who can delete ── %>
+<% if policy(@organization).destroy? %>
 <div class="modal fade" id="deleteOrgModal" tabindex="-1" aria-labelledby="deleteOrgModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="border-radius: 12px; overflow: hidden; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
@@ -243,6 +244,7 @@
     </div>
   </div>
 </div>
+<% end %>
 
 <%# JS: update filename label + drag-and-drop highlight + dynamic links + modal validation %>
 <script>
