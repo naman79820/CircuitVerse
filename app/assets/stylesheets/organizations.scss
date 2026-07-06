@@ -1,408 +1,105 @@
-.organizations-page-wrapper {
-  margin: 0 auto;
-  max-width: 800px;
-  padding: 30px 20px 60px;
-}
-.organizations-page-header {
-  margin-bottom: 28px;
-}
-.organizations-back-link {
-  align-items: center;
-  color: #42b983;
-  display: inline-flex;
-  font-size: 14px;
-  font-weight: 500;
-  gap: 6px;
-  margin-bottom: 16px;
-  text-decoration: none;
-  &:hover {
-    color: #026e57;
-    text-decoration: none;
+$org-green:       #42b983;
+$org-green-dark:  #026e57;
+
+.btn-success {
+  background-color: $org-green;
+  border-color: $org-green;
+  color: #fff;
+  font-weight: 400;
+  transition: filter 0.2s;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: $org-green !important;
+    border-color: $org-green !important;
+    color: #fff !important;
+    filter: brightness(1.05);
   }
 }
-.organizations-page-title {
-  color: #42b983;
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 6px;
+
+.text-success {
+  color: $org-green !important;
 }
-.organizations-page-subtitle {
-  color: #6b7280;
-  font-size: 14px;
-  margin-bottom: 0;
+
+.btn-outline-secondary {
+  border-color: #e5e7eb;
+  color: #374151;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: #f8fafc !important;
+    border-color: #e5e7eb !important;
+    color: #374151 !important;
+  }
 }
-.organizations-form-card {
+
+.input-group-text {
   background-color: #fff;
-  border: 1.5px solid #e5e5e5;
-  border-radius: 10px;
-  padding: 36px 40px 40px;
-}
-.organizations-error-banner {
-  align-items: flex-start;
-  background-color: #fae3e3;
-  border-radius: 6px;
-  color: #ff5959;
-  display: flex;
-  font-size: 14px;
-  gap: 10px;
-  margin-bottom: 24px;
-  padding: 14px 16px;
-  i {
-    flex-shrink: 0;
-    font-size: 16px;
-    margin-top: 2px;
+  border-color: #e5e7eb;
+
+  .fa-building,
+  .fa-map-marker-alt {
+    color: $org-green;
   }
-}
-.organizations-error-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  li {
-    margin-bottom: 4px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-}
-.organizations-form-section-header {
-  border-bottom: 1.5px solid #e5e5e5;
-  margin-bottom: 28px;
-  padding-bottom: 16px;
-}
-.organizations-form-section-title {
-  font-size: 17px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.organizations-form-section-subtitle {
-  color: #6b7280;
-  font-size: 13px;
-  margin-bottom: 0;
-}
-.organizations-field {
-  margin-bottom: 24px;
-}
-.organizations-field-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.organizations-field-hint {
-  color: #6b7280;
-  font-size: 12px;
-  margin-bottom: 8px;
-}
-.organizations-required-asterisk {
-  color: #ff5959;
-  font-size: 13px;
-  margin-left: 3px;
-}
-.organizations-text-input {
-  border: 1.5px solid #e5e5e5;
-  border-radius: 6px;
-  color: #111;
-  font-size: 14px;
-  padding: 10px 14px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  width: 100%;
-  &:focus {
-    border-color: #42b983;
-    box-shadow: 0 0 0 3px rgba(66, 185, 131, 0.25);
-    outline: none;
-  }
-  &::placeholder {
+  .fa-link {
     color: #9ca3af;
   }
 }
-.organizations-input-wrapper {
-  position: relative;
-  .organizations-input-icon {
-    color: #9ca3af;
-    left: 14px;
-    pointer-events: none;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-    &.fa-youtube { color: #ff0000; }
-    &.fa-github { color: #24292e; }
-    &.fa-instagram { color: #e1306c; }
-    &.fa-linkedin { color: #0a66c2; }
-    &.fa-discord { color: #5865F2; }
-    &.fa-facebook { color: #1877f2; }
-    &.fa-slack { color: #e01e5a; }
-  }
-  .custom-icon-x {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background-image: image-url('logos/twitter-x.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-  .organizations-text-input--with-icon {
-    padding-left: 40px;
-  }
+
+.organizations-input-icon,
+.org-social-icon {
+  &.fa-youtube   { color: #ff0000; }
+  &.fa-github    { color: #24292e; }
+  &.fa-instagram { color: #e1306c; }
+  &.fa-linkedin  { color: #0a66c2; }
+  &.fa-discord   { color: #5865f2; }
+  &.fa-facebook  { color: #1877f2; }
+  &.fa-slack     { color: #e01e5a; }
 }
-.organizations-input-group {
-  display: flex;
-  width: 100%;
-  border-radius: 6px;
-  &:focus-within {
-    box-shadow: 0 0 0 3px rgba(66, 185, 131, 0.25);
-    .organizations-input-group__field,
-    .organizations-input-group__suffix {
-      border-color: #42b983;
-    }
-  }
-  .organizations-input-group__field {
-    border-radius: 6px 0 0 6px;
-    border-right: 0;
-    flex: 1;
-    min-width: 0;
-    &:focus {
-      box-shadow: none;
-    }
-  }
-  .organizations-input-group__suffix {
-    align-items: center;
-    background-color: #f8fafc;
-    border: 1.5px solid #e5e5e5;
-    border-left: 0;
-    border-radius: 0 6px 6px 0;
-    color: #6b7280;
-    display: flex;
-    font-size: 13px;
-    padding: 0 12px;
-    white-space: nowrap;
-    transition: border-color 0.2s ease;
-  }
-}
-#organizations-links-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-.organizations-link-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  .organizations-text-input {
-    flex: 1;
-  }
-}
+
 .organizations-remove-link-btn {
-  background: none;
-  border: none;
-  color: #ff5959;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 6px;
-  transition: color 0.2s, transform 0.15s;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #9ca3af;
+  transition: all 0.15s;
+
   &:hover {
-    color: #c21d1d;
-    transform: scale(1.1);
+    background: #fef2f2;
+    color: #ef4444;
+    border-color: #fecaca;
   }
 }
-.organizations-add-link-btn {
-  background: none;
-  border: 1px dashed #42b983;
-  border-radius: 6px;
-  color: #42b983;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 8px 14px;
-  transition: background-color 0.2s, color 0.2s;
-  width: fit-content;
-  &:hover {
-    background-color: #eef7f3;
-    color: #026e57;
-  }
-}
-.organizations-textarea {
-  border: 1.5px solid #e5e5e5;
-  border-radius: 6px;
-  color: #111;
-  font-size: 14px;
-  padding: 10px 14px;
-  resize: vertical;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  width: 100%;
-  &:focus {
-    border-color: #42b983;
-    box-shadow: 0 0 0 3px rgba(66, 185, 131, 0.25);
-    outline: none;
-  }
-  &::placeholder {
-    color: #9ca3af;
-  }
-}
-.organizations-select-wrapper {
-  position: relative;
-}
-.organizations-select {
-  appearance: none;
-  border: 1.5px solid #e5e5e5;
-  border-radius: 6px;
-  color: #111;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 10px 36px 10px 14px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  width: 100%;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-position: right 14px center;
-  background-repeat: no-repeat;
-  &:focus {
-    border-color: #42b983;
-    box-shadow: 0 0 0 3px rgba(66, 185, 131, 0.25);
-    outline: none;
-  }
-}
-.organizations-upload-zone {
+
+.org-upload-zone {
   background-color: #f9fffc;
-  border: 2px dashed #026e57;
+  border: 2px dashed $org-green-dark;
   border-radius: 8px;
   cursor: pointer;
   padding: 36px 20px;
   text-align: center;
   transition: background-color 0.2s, border-color 0.2s;
+
   &:hover,
   &--active {
     background-color: #eef7f3;
-    border-color: #42b983;
+    border-color: $org-green;
+  }
+
+  &__icon {
+    color: $org-green;
+    font-size: 32px;
+    margin-bottom: 10px;
   }
 }
-.organizations-upload-zone__content {
-  pointer-events: none;
-}
-.organizations-upload-zone__icon {
-  color: #42b983;
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-.organizations-upload-zone__text {
-  color: #374151;
-  font-size: 14px;
-  margin-bottom: 4px;
-}
-.organizations-upload-zone__link {
-  color: #42b983;
-  font-weight: 600;
-  &:hover {
-    text-decoration: underline;
-  }
-}
-.organizations-upload-zone__hint {
-  color: #9ca3af;
-  font-size: 12px;
-  margin-bottom: 0;
-}
-.organizations-upload-zone__input {
-  display: none;
-}
-.organizations-upload-filename {
-  color: #42b983;
-  font-size: 13px;
-  font-weight: 500;
-  margin-top: 8px;
-  min-height: 20px;
-}
-.organizations-form-actions {
-  align-items: center;
-  border-top: 1.5px solid #e5e5e5;
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  margin-top: 32px;
-  padding-top: 24px;
-}
-.organizations-btn-primary {
-  background-color: #42b983;
-  border: none;
-  border-radius: 6px;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 10px 24px;
-  transition: background-color 0.2s, transform 0.15s;
-  &:hover {
-    background-color: #026e57;
-    color: #fff;
-    text-decoration: none;
-    transform: translateY(-1px);
-  }
-  &:active {
-    transform: translateY(0);
-  }
-}
-.organizations-btn-secondary {
-  background-color: transparent;
-  border: 1.5px solid #e5e5e5;
-  border-radius: 6px;
-  color: #374151;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 10px 20px;
-  transition: background-color 0.2s, border-color 0.2s;
-  &:hover {
-    background-color: #f8fafc;
-    color: #374151;
-    text-decoration: none;
-  }
-}
-.org-btn-danger-outline {
-  background-color: transparent;
-  color: $primary-red;
-  border: 1px solid $primary-red;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s;
-  i {
-    margin-right: 6px;
-  }
-  &:hover {
-    background-color: $primary-red;
-    color: $white;
-    text-decoration: none;
-  }
-}
-@media (max-width: 600px) {
-  .organizations-form-card {
-    padding: 24px 18px;
-  }
-  .organizations-input-group {
-    flex-direction: column;
-    .organizations-input-group__field {
-      border-radius: 6px 6px 0 0;
-      border-right: 1.5px solid #e5e5e5;
-      border-bottom: 0;
-    }
-    .organizations-input-group__suffix {
-      border-left: 1.5px solid #e5e5e5;
-      border-radius: 0 0 6px 6px;
-      border-top: 0;
-      justify-content: center;
-      padding: 8px 12px;
-    }
-  }
-  .organizations-form-actions {
-    flex-direction: column-reverse;
-    .organizations-btn-primary,
-    .organizations-btn-secondary {
-      text-align: center;
-      width: 100%;
-    }
-  }
+
+.custom-icon-x {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: image-url('logos/twitter-x.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
