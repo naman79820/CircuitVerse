@@ -3,3 +3,21 @@ en:
     show:
       no_members: "No members yet."
       no_groups: "No groups linked to this organization yet."
+    create:
+      success: "Organization was successfully created."
+      failure: "Organization could not be created."
+    update:
+      success: "Organization was successfully updated."
+    destroy:
+      success: "Organization was successfully deleted."
+  organization_members:
+    create:
+      success: "Member was successfully added."
+      invalid_role: "Invalid role specified."
+    update:
+      success: "Member role was successfully updated."
+    destroy:
+      success: "Member was successfully removed."
+    leave:
+      success: "You have successfully left the organization."
+      not_a_member: "You are not a member of this organization."

@@ -80,7 +80,13 @@ class OrganizationMembersController < ApplicationController
   # DELETE /organizations/1/leave
   # DELETE /organizations/1/leave.json
   def leave
-    @organization_member = @organization.organization_members.find_by!(user: current_user)
+    @organization_member = @organization.organization_members.find_by(user: current_user)
+
+    if @organization_member.nil?
+      redirect_to organizations_path, alert: t(".not_a_member")
+      return
+    end
+
     authorize @organization, :leave?
 
     @organization_member.destroy
