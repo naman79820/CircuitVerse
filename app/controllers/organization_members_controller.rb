@@ -12,18 +12,20 @@ class OrganizationMembersController < ApplicationController
   # POST /organizations/1/organization_members
   # POST /organizations/1/organization_members.json
   def create
-    @organization_member = @organization.organization_members.new(organization_member_params)
+    role = params.dig(:organization_member, :role).presence || "member"
+    unless OrganizationMember.roles.key?(role)
+      respond_to do |format|
+        format.html { redirect_to members_organization_path(@organization), alert: t(".invalid_role") }
+        format.json { render json: { error: t(".invalid_role") }, status: :unprocessable_content }
+      end
+      return
+    end
+
+    notice = process_member_emails(role)
 
     respond_to do |format|
-      if @organization_member.save
-        format.html { redirect_to @organization, notice: t(".success") }
-        format.json { render :show, status: :created, location: @organization }
-      else
-        format.html do
-          redirect_to @organization, alert: @organization_member.errors.full_messages.to_sentence
-        end
-        format.json { render json: @organization_member.errors, status: :unprocessable_content }
-      end
+      format.html { redirect_to members_organization_path(@organization), notice: notice }
+      format.json { render json: { message: notice }, status: :created }
     end
   end
 
@@ -32,11 +34,12 @@ class OrganizationMembersController < ApplicationController
   def update
     respond_to do |format|
       if @organization_member.update(organization_member_update_params)
-        format.html { redirect_to @organization, notice: t(".success") }
+        format.html { redirect_to members_organization_path(@organization), notice: t(".success") }
         format.json { head :no_content }
       else
         format.html do
-          redirect_to @organization, alert: @organization_member.errors.full_messages.to_sentence
+          redirect_to members_organization_path(@organization),
+                      alert: @organization_member.errors.full_messages.to_sentence
         end
         format.json { render json: @organization_member.errors, status: :unprocessable_content }
       end
@@ -48,7 +51,7 @@ class OrganizationMembersController < ApplicationController
   def destroy
     @organization_member.destroy
     respond_to do |format|
-      format.html { redirect_to @organization, notice: t(".success") }
+      format.html { redirect_to members_organization_path(@organization), notice: t(".success") }
       format.json { head :no_content }
     end
   end
@@ -82,12 +85,44 @@ class OrganizationMembersController < ApplicationController
       @organization_member = @organization.organization_members.find(params.expect(:id))
     end
 
-    def organization_member_params
-      params.expect(organization_member: %i[user_id role])
-    end
-
     def organization_member_update_params
       params.expect(organization_member: [:role])
+    end
+
+    def process_member_emails(role)
+      emails_raw = params.dig(:organization_member, :emails).to_s
+      emails = emails_raw.split(/[,\s]+/).map(&:strip).compact_blank
+      added, not_found, already_member = categorize_emails(emails, role)
+      build_notice(added, not_found, already_member, emails)
+    end
+
+    def categorize_emails(emails, role)
+      added = []
+      not_found = []
+      already_member = []
+
+      emails.each do |email|
+        user = User.find_by(email: email)
+        if user.nil?
+          not_found << email
+        elsif @organization.organization_members.exists?(user_id: user.id)
+          already_member << email
+        else
+          @organization.organization_members.create!(user: user, role: role)
+          added << email
+        end
+      end
+
+      [added, not_found, already_member]
+    end
+
+    def build_notice(added, not_found, already_member, emails)
+      parts = []
+      parts << "Added #{added.size} member(s)." if added.any?
+      parts << "Not found in CircuitVerse: #{not_found.join(', ')}." if not_found.any?
+      parts << "Already a member: #{already_member.join(', ')}." if already_member.any?
+      parts << "No emails provided." if emails.empty?
+      parts.join(" ")
     end
 
     def check_organizations_feature_flag

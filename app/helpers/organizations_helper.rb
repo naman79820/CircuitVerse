@@ -49,6 +49,6 @@ module OrganizationsHelper
   def format_url_text(url)
     return "" if url.blank? || !url.match?(%r{\Ahttps?://}i)
 
-    url.sub(%r{^https?://(www\.)?}, "").chomp("/")
+    url.sub(%r{\Ahttps?://(www\.)?}i, "").sub(%r{/+\z}, "")
   end
 end

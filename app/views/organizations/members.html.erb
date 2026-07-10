@@ -1,8 +1,7 @@
 <% content_for :title, "Members - #{@organization.name}" %>
+
 <% content_for :dashboard_content do %>
-  <div class="org-dash-empty">
-    <i class="fa fa-users" aria-hidden="true"></i>
-    <p>Members management is coming soon.</p>
-  </div>
+  <%= render "members_content" %>
 <% end %>
+
 <%= render "dashboard_shell" %>

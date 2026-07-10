@@ -33,9 +33,12 @@ class OrganizationsController < ApplicationController
   end
 
   # GET /organizations/1/members
-  # (members tab content is added in a follow-up PR)
   def members
     @active_tab = "members"
+    members = @organization.organization_members.includes(:user).references(:user)
+    members = search_members(members)
+    members = sort_members(members)
+    @organization_members = members.paginate(page: params[:page], per_page: 10)
   end
 
   # GET /organizations/1/settings
@@ -120,6 +123,36 @@ class OrganizationsController < ApplicationController
 
     def check_edit_access
       authorize @organization, :admin_access?
+    end
+
+    def search_members(scope)
+      return scope if params[:q].blank?
+
+      scope.where("users.name ILIKE ?", "%#{params[:q]}%")
+    end
+
+    def sort_members(scope)
+      ascending = params[:direction] == "asc"
+
+      case params[:sort]
+      when "name"
+        scope.order(Arel.sql("users.name #{ascending ? 'ASC' : 'DESC'}"))
+      when "role"
+        scope.order(Arel.sql(role_priority_sql(ascending)))
+      when "joined"
+        scope.order(created_at: (ascending ? :asc : :desc))
+      else
+        scope.order(created_at: :desc)
+      end
+    end
+
+    def role_priority_sql(ascending)
+      ordered = ascending ? %w[member mentor admin] : %w[admin mentor member]
+      when_clauses = ordered.each_with_index.map do |name, i|
+        "WHEN #{OrganizationMember.roles[name].to_i} THEN #{i}"
+      end.join(" ")
+
+      "CASE organization_members.role #{when_clauses} END"
     end
 
     def create_organization
