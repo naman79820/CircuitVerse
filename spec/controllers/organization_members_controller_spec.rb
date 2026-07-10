@@ -47,7 +47,7 @@ RSpec.describe OrganizationMembersController, type: :controller do
 
       it "redirects to the organization" do
         post :create, params: { organization_id: organization.id, organization_member: valid_attributes }
-        expect(response).to redirect_to(organization_organization_members_path(organization))
+        expect(response).to redirect_to(members_organization_path(organization))
       end
     end
 
@@ -84,7 +84,7 @@ RSpec.describe OrganizationMembersController, type: :controller do
       it "redirects to the organization" do
         patch :update,
               params: { organization_id: organization.id, id: target_member.id, organization_member: new_attributes }
-        expect(response).to redirect_to(organization_organization_members_path(organization))
+        expect(response).to redirect_to(members_organization_path(organization))
       end
 
       it "returns a forbidden status when demoting sole admin" do
@@ -115,7 +115,7 @@ RSpec.describe OrganizationMembersController, type: :controller do
 
       it "redirects to the organization" do
         delete :destroy, params: { organization_id: organization.id, id: target_member.id }
-        expect(response).to redirect_to(organization_organization_members_path(organization))
+        expect(response).to redirect_to(members_organization_path(organization))
       end
     end
 

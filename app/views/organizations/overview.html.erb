@@ -1,0 +1,39 @@
+<% content_for :title, @organization.name %>
+
+<% content_for :dashboard_content do %>
+  <section class="org-dash-section">
+    <div class="org-dash-section-head">
+      <h3 class="org-dash-section-title">Groups</h3>
+      <% if policy(@organization).admin_access? %>
+        <%= link_to new_group_path(organization_id: @organization.slug), class: "org-dash-add-btn" do %>
+          <i class="fa fa-plus" aria-hidden="true"></i> New Group
+        <% end %>
+      <% end %>
+    </div>
+
+    <% if @groups.blank? %>
+      <div class="org-dash-empty">
+        <i class="fa fa-layer-group" aria-hidden="true"></i>
+        <p><%= t("organizations.show.no_groups") %></p>
+      </div>
+    <% else %>
+      <div class="org-dash-groups">
+        <% @groups.each do |group| %>
+          <%= link_to group_path(group), class: "org-dash-group-card" do %>
+            <span class="org-dash-group-name"><%= group.name %></span>
+            <span class="org-dash-group-meta">
+              <i class="fa fa-user" aria-hidden="true"></i>
+              <%= pluralize(group.group_members.size, "member") %>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="org-index-pagination org-dash-pagination">
+        <%= will_paginate @groups, param_name: "groups_page", renderer: PaginateRenderer %>
+      </div>
+    <% end %>
+  </section>
+<% end %>
+
+<%= render "dashboard_shell" %>

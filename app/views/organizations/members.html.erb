@@ -1,0 +1,7 @@
+<% content_for :title, "Members - #{@organization.name}" %>
+
+<% content_for :dashboard_content do %>
+  <%= render "members_content" %>
+<% end %>
+
+<%= render "dashboard_shell" %>

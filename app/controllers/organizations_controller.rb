@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class OrganizationsController < ApplicationController
-  before_action :authenticate_user!, except: %i[show check_slug]
+  before_action :authenticate_user!, except: %i[overview members check_slug]
   before_action :check_organizations_feature_flag
-  before_action :set_organization, only: %i[show edit update destroy]
-  before_action :check_show_access, only: %i[show]
-  before_action :check_edit_access, only: %i[edit update destroy]
+  before_action :set_organization, only: %i[show overview members settings update destroy]
+  before_action :check_show_access, only: %i[show overview members settings]
+  before_action :check_edit_access, only: %i[settings update destroy]
 
   # GET /organizations
   def index
@@ -16,19 +16,57 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  # GET /organizations/1
+  # GET /organizations/1  → redirect to overview tab
   def show
-    @groups = @organization.groups.order(created_at: :desc).paginate(page: params[:groups_page], per_page: 9)
+    redirect_to overview_organization_path(@organization)
+  end
 
-    @members = @organization.organization_members.includes(:user).references(:user)
+  # GET /organizations/1/overview
+  def overview
+    @active_tab = "overview"
+    @groups = @organization.groups.order(created_at: :desc)
+                           .paginate(page: params[:groups_page], per_page: 9)
+  end
 
-    if params[:role].present? && OrganizationMember.roles.key?(params[:role])
-      @members = @members.where(role: params[:role])
+# GET /organizations/1/members
+  def members
+    @active_tab = "members"
+    @organization_members = @organization.organization_members.includes(:user).references(:user)
+
+    # Name search
+    if params[:q].present?
+      @organization_members = @organization_members.where("users.name ILIKE ?", "%#{params[:q]}%")
     end
 
-    @members = @members.where("users.name ILIKE ?", "%#{params[:q]}%") if params[:q].present?
+    # Column sorting: sort = name | role | joined, direction = asc | desc
+    direction = params[:direction] == "asc" ? "asc" : "desc"
 
-    @members = @members.order(role: :asc, "users.name" => :asc).paginate(page: params[:members_page], per_page: 10)
+    @organization_members =
+      case params[:sort]
+      when "name"
+        @organization_members.order(Arel.sql("users.name #{direction == 'asc' ? 'ASC' : 'DESC'}"))
+      when "role"
+        # Sort by role priority. desc = admin -> mentor -> member (high to low),
+        # asc = member -> mentor -> admin. Uses the enum's stored integer values,
+        # so it's independent of how the enum is declared.
+        ordered = direction == "asc" ? %w[member mentor admin] : %w[admin mentor member]
+        when_clauses = ordered.each_with_index.map do |name, i|
+          "WHEN #{OrganizationMember.roles[name].to_i} THEN #{i}"
+        end.join(" ")
+        @organization_members.order(Arel.sql("CASE organization_members.role #{when_clauses} END"))
+      when "joined"
+        @organization_members.order(created_at: (direction == "asc" ? :asc : :desc))
+      else
+        # Default: newest members first
+        @organization_members.order(created_at: :desc)
+      end
+
+    @organization_members = @organization_members.paginate(page: params[:page], per_page: 10)
+  end
+
+  # GET /organizations/1/settings  (renders the edit form; saves via #update)
+  def settings
+    @active_tab = "settings"
   end
 
   # GET /organizations/new
@@ -44,11 +82,7 @@ class OrganizationsController < ApplicationController
     render json: { slug: base_slug, available: base_slug.present? && !is_taken }
   end
 
-  # GET /organizations/1/edit
-  def edit; end
-
   # POST /organizations
-  # POST /organizations.json
   def create
     @organization = Organization.new(organization_params)
 
@@ -64,22 +98,21 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /organizations/1
-  # PATCH/PUT /organizations/1.json
+  # PATCH/PUT /organizations/1  (settings form submits here)
   def update
     respond_to do |format|
       if @organization.update(organization_params)
-        format.html { redirect_to @organization, notice: t(".success") }
+        format.html { redirect_to settings_organization_path(@organization), notice: t(".success") }
         format.json { render :show, status: :ok, location: @organization }
       else
-        format.html { render :edit }
+        @active_tab = "settings"
+        format.html { render :settings, status: :unprocessable_content }
         format.json { render json: @organization.errors, status: :unprocessable_content }
       end
     end
   end
 
   # DELETE /organizations/1
-  # DELETE /organizations/1.json
   def destroy
     @organization.destroy
     respond_to do |format|

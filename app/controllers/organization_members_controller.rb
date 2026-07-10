@@ -8,27 +8,6 @@ class OrganizationMembersController < ApplicationController
   before_action :check_create_access, only: %i[create]
   before_action :check_update_access, only: %i[update]
   before_action :check_destroy_access, only: %i[destroy]
-  before_action :check_index_access, only: %i[index]
-
-  def index
-    @organization_members = @organization.organization_members.includes(:user).references(:user)
-
-    if params[:role].present? && OrganizationMember.roles.key?(params[:role])
-      @organization_members = @organization_members.where(role: params[:role])
-    end
-
-    @organization_members = @organization_members.where("users.name ILIKE ?", "%#{params[:q]}%") if params[:q].present?
-
-    @organization_members = if params[:sort] == "newest"
-      @organization_members.order(created_at: :desc)
-    elsif params[:sort] == "oldest"
-      @organization_members.order(created_at: :asc)
-    else
-      @organization_members.order(role: :asc, "users.name" => :asc)
-    end
-
-    @organization_members = @organization_members.paginate(page: params[:page], per_page: 10)
-  end
 
   # POST /organizations/1/organization_members
   # POST /organizations/1/organization_members.json
@@ -36,7 +15,7 @@ class OrganizationMembersController < ApplicationController
     role = params.dig(:organization_member, :role).presence || "member"
     unless OrganizationMember.roles.key?(role)
       respond_to do |format|
-        format.html { redirect_to organization_organization_members_path(@organization), alert: t(".invalid_role") }
+        format.html { redirect_to members_organization_path(@organization), alert: t(".invalid_role") }
         format.json { render json: { error: t(".invalid_role") }, status: :unprocessable_content }
       end
       return
@@ -45,7 +24,7 @@ class OrganizationMembersController < ApplicationController
     notice = process_member_emails(role)
 
     respond_to do |format|
-      format.html { redirect_to organization_organization_members_path(@organization), notice: notice }
+      format.html { redirect_to members_organization_path(@organization), notice: notice }
       format.json { render json: { message: notice }, status: :created }
     end
   end
@@ -55,11 +34,11 @@ class OrganizationMembersController < ApplicationController
   def update
     respond_to do |format|
       if @organization_member.update(organization_member_update_params)
-        format.html { redirect_to organization_organization_members_path(@organization), notice: t(".success") }
+        format.html { redirect_to members_organization_path(@organization), notice: t(".success") }
         format.json { head :no_content }
       else
         format.html do
-          redirect_to organization_organization_members_path(@organization),
+          redirect_to members_organization_path(@organization),
                       alert: @organization_member.errors.full_messages.to_sentence
         end
         format.json { render json: @organization_member.errors, status: :unprocessable_content }
@@ -72,7 +51,7 @@ class OrganizationMembersController < ApplicationController
   def destroy
     @organization_member.destroy
     respond_to do |format|
-      format.html { redirect_to organization_organization_members_path(@organization), notice: t(".success") }
+      format.html { redirect_to members_organization_path(@organization), notice: t(".success") }
       format.json { head :no_content }
     end
   end
@@ -162,9 +141,5 @@ class OrganizationMembersController < ApplicationController
 
     def check_destroy_access
       authorize @organization_member, :destroy?
-    end
-
-    def check_index_access
-      authorize @organization, :show_access?
     end
 end
