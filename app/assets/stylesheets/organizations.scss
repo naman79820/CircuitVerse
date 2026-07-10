@@ -1,0 +1,304 @@
+$org-green:      #42b983;
+$org-green-dark: #026e57;
+
+.org-social-icon,
+.organizations-input-icon {
+  &.fa-youtube    { color: #ff0000; }
+  &.fa-github     { color: #24292e; }
+  &.fa-instagram  { color: #e1306c; }
+  &.fa-linkedin   { color: #0a66c2; }
+  &.fa-discord    { color: #5865f2; }
+  &.fa-facebook   { color: #1877f2; }
+  &.fa-slack      { color: #e01e5a; }
+  &.fa-twitter,
+  &.fa-x-twitter  { color: #000000; }
+}
+
+.custom-icon-x {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: #000;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.org-dash {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+  color: #1f2937;
+}
+
+.org-dash-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: $org-green;
+  margin: 0 0 14px;
+}
+
+.org-dash-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.org-dash-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  background: #fff;
+  text-decoration: none;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: $org-green;
+    color: $org-green;
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    border-color: $org-green;
+    color: $org-green;
+    outline: 2px solid $org-green;
+    outline-offset: 2px;
+  }
+
+  &.is-active {
+    background: $org-green;
+    border-color: $org-green;
+    color: #fff;
+  }
+}
+
+.org-dash-divider {
+  border: 0;
+  border-top: 1px solid #d1d5db;
+  margin: 16px 0 24px;
+}
+
+.org-dash-header {
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+.org-dash-logo {
+  flex-shrink: 0;
+  width: 130px;
+  height: 130px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.org-dash-logo-fallback {
+  font-size: 52px;
+  font-weight: 700;
+  color: $org-green;
+}
+
+.org-dash-info {
+  padding-top: 4px;
+  min-width: 0;
+}
+.org-dash-info-name {
+  font-size: 30px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px;
+  line-height: 1.15;
+}
+.org-dash-info-desc {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0 0 14px;
+  max-width: 640px;
+  line-height: 1.5;
+}
+.org-dash-info-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.org-dash-socials {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.org-dash-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  line-height: 1;
+  font-size: 25px;
+  color: #6b7280;
+  text-decoration: none;
+  transition: transform 0.15s, filter 0.15s;
+
+  i { line-height: 1; display: block; }
+  svg { display: block; }
+
+  &:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    transform: translateY(-2px);
+    outline: 2px solid $org-green;
+    outline-offset: 2px;
+  }
+}
+
+.org-dash-social-x {
+  color: #000000;
+  display: inline-flex;
+  align-items: center;
+
+  svg { display: block; }
+}
+
+.org-dash-meta-sep {
+  width: 1px;
+  height: 20px;
+  background: #d1d5db;
+}
+.org-dash-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  color: #4b5563;
+
+  i {
+    color: $org-green;
+    font-size: 25px;
+    line-height: 1;
+  }
+}
+
+.org-dash-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.org-dash-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+.org-dash-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: $org-green;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: filter 0.15s;
+
+  &:hover { filter: brightness(1.05); color: #fff; text-decoration: none; }
+  &:focus-visible {
+    outline: 2px solid $org-green-dark;
+    outline-offset: 2px;
+  }
+}
+
+.org-dash-groups {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+.org-dash-group-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 150px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #d9f5e6;
+  border: 1px solid #bfe9d3;
+  color: #1f2937;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(66, 185, 131, 0.18);
+    text-decoration: none;
+    color: #1f2937;
+  }
+  &:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(66, 185, 131, 0.18);
+    outline: 2px solid $org-green;
+    outline-offset: 2px;
+  }
+}
+.org-dash-group-name {
+  font-size: 17px;
+  font-weight: 600;
+  color: #065f46;
+  overflow-wrap: break-word;
+}
+.org-dash-group-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #059669;
+}
+
+.org-dash-empty {
+  text-align: center;
+  padding: 56px 20px;
+  color: #9ca3af;
+  border: 1px dashed #d1d5db;
+  border-radius: 12px;
+
+  i { font-size: 36px; margin-bottom: 10px; opacity: 0.6; }
+  p { margin: 0; font-weight: 500; }
+}
+
+.org-dash-pagination {
+  margin-top: 28px;
+}
+
+@media (max-width: 900px) {
+  .org-dash-groups { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .org-dash-header { flex-direction: column; }
+  .org-dash-logo { width: 96px; height: 96px; }
+  .org-dash-info-name { font-size: 24px; }
+  .org-dash-groups { grid-template-columns: 1fr; }
+}

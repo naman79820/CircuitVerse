@@ -58,9 +58,9 @@ RSpec.describe OrganizationsController, type: :controller do
         create(:organization_member, user: user, organization: organization)
       end
 
-      it "returns a success response" do
+      it "redirects to the overview tab" do
         get :show, params: { id: organization.id }
-        expect(response).to be_successful
+        expect(response).to redirect_to(overview_organization_path(organization))
       end
     end
 
