@@ -302,3 +302,88 @@ $org-green-dark: #026e57;
   .org-dash-info-name { font-size: 24px; }
   .org-dash-groups { grid-template-columns: 1fr; }
 }
+
+.org-dash {
+  .btn-success {
+    background-color: $org-green;
+    border-color: $org-green;
+    color: #fff;
+    font-weight: 400;
+    transition: filter 0.2s;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $org-green;
+      border-color: $org-green;
+      color: #fff;
+      filter: brightness(1.05);
+    }
+  }
+
+  .text-success {
+    color: $org-green;
+  }
+
+  .btn-outline-secondary {
+    border-color: #e5e7eb;
+    color: #374151;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: #f8fafc;
+      border-color: #e5e7eb;
+      color: #374151;
+    }
+  }
+
+  .input-group-text {
+    background-color: #fff;
+    border-color: #e5e7eb;
+
+    .fa-building,
+    .fa-map-marker-alt {
+      color: $org-green;
+    }
+
+    .fa-link {
+      color: #9ca3af;
+    }
+  }
+}
+
+.organizations-remove-link-btn {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #9ca3af;
+  transition: all 0.15s;
+
+  &:hover {
+    background: #fef2f2;
+    color: #ef4444;
+    border-color: #fecaca;
+  }
+}
+
+.org-upload-zone {
+  background-color: #f9fffc;
+  border: 2px dashed $org-green-dark;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 36px 20px;
+  text-align: center;
+  transition: background-color 0.2s, border-color 0.2s;
+
+  &:hover,
+  &--active {
+    background-color: #eef7f3;
+    border-color: $org-green;
+  }
+
+  &__icon {
+    color: $org-green;
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+}

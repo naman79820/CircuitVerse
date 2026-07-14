@@ -17,6 +17,7 @@ describe OrganizationPolicy do
 
     it { is_expected.to permit(:show_access) }
     it { is_expected.to permit(:admin_access) }
+    it { is_expected.to permit(:destroy) }
     it { is_expected.to permit(:create_group) }
   end
 
@@ -26,6 +27,7 @@ describe OrganizationPolicy do
 
     it { is_expected.to permit(:show_access) }
     it { is_expected.to permit(:admin_access) }
+    it { is_expected.to permit(:destroy) }
     it { is_expected.to permit(:create_group) }
   end
 
@@ -40,6 +42,7 @@ describe OrganizationPolicy do
 
     it { is_expected.to permit(:show_access) }
     it { is_expected.not_to permit(:admin_access) }
+    it { is_expected.not_to permit(:destroy) }
     it { is_expected.to permit(:create_group) }
     it { is_expected.to permit(:leave) }
 
@@ -63,6 +66,7 @@ describe OrganizationPolicy do
 
     it { is_expected.to permit(:show_access) }
     it { is_expected.not_to permit(:admin_access) }
+    it { is_expected.not_to permit(:destroy) }
     it { is_expected.not_to permit(:create_group) }
     it { is_expected.to permit(:leave) }
   end
@@ -72,6 +76,7 @@ describe OrganizationPolicy do
     let(:organization) { @organization }
 
     it { is_expected.not_to permit(:admin_access) }
+    it { is_expected.not_to permit(:destroy) }
     it { is_expected.not_to permit(:create_group) }
     it { is_expected.not_to permit(:leave) }
 

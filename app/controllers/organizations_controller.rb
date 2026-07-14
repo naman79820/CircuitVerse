@@ -3,9 +3,9 @@
 class OrganizationsController < ApplicationController
   before_action :authenticate_user!, except: %i[overview members check_slug]
   before_action :check_organizations_feature_flag
-  before_action :set_organization, only: %i[show overview members settings edit update destroy]
+  before_action :set_organization, only: %i[show overview members settings update destroy]
   before_action :check_show_access, only: %i[show overview members]
-  before_action :check_edit_access, only: %i[settings edit update destroy]
+  before_action :check_edit_access, only: %i[settings update destroy]
 
   # GET /organizations
   def index
@@ -28,7 +28,7 @@ class OrganizationsController < ApplicationController
                            .left_joins(:group_members)
                            .select("groups.*, COUNT(group_members.id) AS group_members_count")
                            .group("groups.id")
-                           .order(created_at: :desc)
+                           .order(Group.arel_table[:created_at].desc)
                            .paginate(page: params[:groups_page], per_page: 9, total_entries: @organization.groups.count)
   end
 
@@ -57,9 +57,6 @@ class OrganizationsController < ApplicationController
     render json: { slug: base_slug, available: base_slug.present? && !is_taken }
   end
 
-  # GET /organizations/1/edit
-  def edit; end
-
   # POST /organizations
   def create
     @organization = Organization.new(organization_params)
@@ -80,10 +77,11 @@ class OrganizationsController < ApplicationController
   def update
     respond_to do |format|
       if @organization.update(organization_params)
-        format.html { redirect_to @organization, notice: t(".success") }
+        format.html { redirect_to settings_organization_path(@organization), notice: t(".success") }
         format.json { render :show, status: :ok, location: @organization }
       else
-        format.html { render :edit }
+        @active_tab = "settings"
+        format.html { render :settings, status: :unprocessable_content }
         format.json { render json: @organization.errors, status: :unprocessable_content }
       end
     end

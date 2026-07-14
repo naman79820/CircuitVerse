@@ -79,19 +79,6 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe "GET #edit" do
-    context "when user has edit access" do
-      before do
-        create(:organization_member, user: user, organization: organization, role: :admin)
-      end
-
-      it "returns a success response" do
-        get :edit, params: { id: organization.id }
-        expect(response).to be_successful
-      end
-    end
-  end
-
   describe "POST #create" do
     context "with valid params" do
       let(:valid_attributes) { { name: "New Org" } }
@@ -139,9 +126,9 @@ RSpec.describe OrganizationsController, type: :controller do
           expect(organization.name).to eq("Updated Org")
         end
 
-        it "redirects to the organization" do
+        it "redirects to the settings tab" do
           patch :update, params: { id: organization.id, organization: new_attributes }
-          expect(response).to redirect_to(organization)
+          expect(response).to redirect_to(settings_organization_path(organization))
         end
       end
     end
