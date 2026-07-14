@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class OrganizationsController < ApplicationController
-  before_action :authenticate_user!, except: %i[overview members check_slug]
+  before_action :authenticate_user!, except: %i[show overview members check_slug]
   before_action :check_organizations_feature_flag
   before_action :set_organization, only: %i[show overview members settings update destroy]
   before_action :check_show_access, only: %i[show overview members]
