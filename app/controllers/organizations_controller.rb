@@ -3,9 +3,9 @@
 class OrganizationsController < ApplicationController
   before_action :authenticate_user!
   before_action :check_organizations_feature_flag
-  before_action :set_organization, only: %i[show overview members settings edit update destroy]
+  before_action :set_organization, only: %i[show overview members settings update destroy]
   before_action :check_show_access, only: %i[show overview members]
-  before_action :check_edit_access, only: %i[settings edit update destroy]
+  before_action :check_edit_access, only: %i[settings update destroy]
 
   # GET /organizations
   def index
@@ -56,9 +56,6 @@ class OrganizationsController < ApplicationController
 
     render json: { slug: base_slug, available: base_slug.present? && !is_taken }
   end
-
-  # GET /organizations/1/edit
-  def edit; end
 
   # POST /organizations
   def create

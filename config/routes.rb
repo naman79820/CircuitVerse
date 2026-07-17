@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   end
 
   # resources :assignment_submissions
-  resources :organizations do
+  resources :organizations, except: %i[edit] do
     member do
       get :overview
       get :members

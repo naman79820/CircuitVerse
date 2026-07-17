@@ -79,14 +79,14 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe "GET #edit" do
+  describe "GET #settings" do
     context "when user has edit access" do
       before do
         create(:organization_member, user: user, organization: organization, role: :admin)
       end
 
       it "returns a success response" do
-        get :edit, params: { id: organization.id }
+        get :settings, params: { id: organization.id }
         expect(response).to be_successful
       end
     end
