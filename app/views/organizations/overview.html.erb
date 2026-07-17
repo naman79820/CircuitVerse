@@ -1,39 +1,71 @@
 <% content_for :title, @organization.name %>
 
-<% content_for :dashboard_content do %>
-  <section class="org-dash-section">
-    <div class="org-dash-section-head">
-      <h3 class="org-dash-section-title">Groups</h3>
-      <% if policy(@organization).admin_access? %>
-        <%= link_to new_group_path(organization_id: @organization.slug), class: "org-dash-add-btn" do %>
-          <i class="fa fa-plus" aria-hidden="true"></i> New Group
-        <% end %>
-      <% end %>
-    </div>
+<%= render(OrganizationDashboardShellComponent.new(organization: @organization, active_tab: "overview")) do |shell| %>
+  <% shell.with_tab_content do %>
 
-    <% if @groups.blank? %>
-      <div class="org-dash-empty">
-        <i class="fa fa-layer-group" aria-hidden="true"></i>
-        <p><%= t("organizations.show.no_groups") %></p>
+    <header class="org-dash-header">
+      <div class="org-dash-logo">
+        <% if @organization.logo.attached? %>
+          <%= image_tag @organization.logo, alt: "#{@organization.name} logo" %>
+        <% else %>
+          <span class="org-dash-logo-fallback"><%= @organization.name.first.upcase %></span>
+        <% end %>
       </div>
-    <% else %>
-      <div class="org-dash-groups">
-        <% @groups.each do |group| %>
-          <%= link_to group_path(group), class: "org-dash-group-card" do %>
-            <span class="org-dash-group-name"><%= group.name %></span>
-            <span class="org-dash-group-meta">
-              <i class="fa fa-user" aria-hidden="true"></i>
-              <%= pluralize(group.group_members_count, "member") %>
-            </span>
+
+      <div class="org-dash-info">
+        <p class="org-dash-info-name"><%= @organization.name %></p>
+        <% if @organization.description.present? %>
+          <p class="org-dash-info-desc"><%= @organization.description %></p>
+        <% end %>
+        <div class="org-dash-info-meta">
+  <% has_links = @organization.links.present? && @organization.links.reject(&:blank?).any? %>
+  <% if has_links %>
+    <%= render(OrganizationSocialLinksComponent.new(links: @organization.links)) %>
+  <% end %>
+  <% if @organization.location.present? %>
+    <% if has_links %><span class="org-dash-meta-sep" aria-hidden="true"></span><% end %>
+    <span class="org-dash-location">
+      <i class="fa fa-map-marker-alt" aria-hidden="true"></i>
+      <%= @organization.location %>
+    </span>
+  <% end %>
+</div>
+      </div>
+    </header>
+
+    <%# Groups section (your existing content) %>
+    <section class="org-dash-section">
+      <div class="org-dash-section-head">
+        <h3 class="org-dash-section-title">Groups</h3>
+        <% if policy(@organization).admin_access? %>
+          <%= link_to new_group_path(organization_id: @organization.slug), class: "org-dash-add-btn" do %>
+            <i class="fa fa-plus" aria-hidden="true"></i> New Group
           <% end %>
         <% end %>
       </div>
 
-      <div class="org-index-pagination org-dash-pagination">
-        <%= will_paginate @groups, param_name: "groups_page", renderer: PaginateRenderer %>
-      </div>
-    <% end %>
-  </section>
-<% end %>
+      <% if @groups.blank? %>
+        <div class="org-dash-empty">
+          <i class="fa fa-layer-group" aria-hidden="true"></i>
+          <p><%= t("organizations.show.no_groups") %></p>
+        </div>
+      <% else %>
+        <div class="org-dash-groups">
+          <% @groups.each do |group| %>
+            <%= link_to group_path(group), class: "org-dash-group-card" do %>
+              <span class="org-dash-group-name"><%= group.name %></span>
+              <span class="org-dash-group-meta">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <%= pluralize(group.group_members_count, "member") %>
+              </span>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="org-index-pagination org-dash-pagination">
+          <%= will_paginate @groups, param_name: "groups_page", renderer: PaginateRenderer %>
+        </div>
+      <% end %>
+    </section>
 
-<%= render "dashboard_shell" %>
+  <% end %>
+<% end %>

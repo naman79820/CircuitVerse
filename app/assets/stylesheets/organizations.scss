@@ -1,34 +1,6 @@
 $org-green:      #42b983;
 $org-green-dark: #026e57;
 
-.org-social-icon,
-.organizations-input-icon {
-  &.fa-youtube    { color: #ff0000; }
-  &.fa-github     { color: #24292e; }
-  &.fa-instagram  { color: #e1306c; }
-  &.fa-linkedin   { color: #0a66c2; }
-  &.fa-discord    { color: #5865f2; }
-  &.fa-facebook   { color: #1877f2; }
-  &.fa-slack      { color: #e01e5a; }
-  &.fa-twitter,
-  &.fa-x-twitter  { color: #000000; }
-}
-
-.custom-icon-x {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background-color: #000;
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/%3E%3C/svg%3E");
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/%3E%3C/svg%3E");
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-}
-
 .org-dash {
   max-width: 1080px;
   margin: 0 auto;
@@ -48,6 +20,14 @@ $org-green-dark: #026e57;
   gap: 10px;
   flex-wrap: wrap;
 }
+
+.org-social-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  display: block;
+}
+
 .org-dash-tab {
   display: inline-flex;
   align-items: center;
@@ -151,15 +131,8 @@ $org-green-dark: #026e57;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 25px;
-  line-height: 1;
-  font-size: 25px;
-  color: #6b7280;
   text-decoration: none;
   transition: transform 0.15s, filter 0.15s;
-
-  i { line-height: 1; display: block; }
-  svg { display: block; }
 
   &:hover {
     transform: translateY(-2px);
@@ -172,14 +145,6 @@ $org-green-dark: #026e57;
     outline: 2px solid $org-green;
     outline-offset: 2px;
   }
-}
-
-.org-dash-social-x {
-  color: #000000;
-  display: inline-flex;
-  align-items: center;
-
-  svg { display: block; }
 }
 
 .org-dash-meta-sep {

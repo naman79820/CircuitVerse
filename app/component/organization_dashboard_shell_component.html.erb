@@ -1,0 +1,15 @@
+<div class="org-dash">
+  <h1 class="org-dash-name"><%= @organization.name %></h1>
+
+  <nav class="org-dash-tabs" aria-label="Organization sections">
+    <%= link_to "Overview", overview_organization_path(@organization), class: tab_class("overview") %>
+    <%= link_to "Members", members_organization_path(@organization), class: tab_class("members") %>
+    <% if show_settings_tab? %>
+      <%= link_to "Settings", settings_organization_path(@organization), class: tab_class("settings") %>
+    <% end %>
+  </nav>
+
+  <hr class="org-dash-divider">
+
+  <%= tab_content %>
+</div>
