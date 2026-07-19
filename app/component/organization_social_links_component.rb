@@ -7,11 +7,13 @@ class OrganizationSocialLinksComponent < ViewComponent::Base
   end
 
   def social_links
-    @links.compact_blank.map do |link|
-      host = url_host(link)
-      {   name: name_for(host),
-          url: link,
-          logo: logo_for(host) }
+    Array(@links).compact_blank.map do |link|
+      provider = provider_for(url_host(link))
+      {
+        name: provider[:name],
+        url: link,
+        logo: provider[:logo]
+      }
     end
   end
 
@@ -26,25 +28,19 @@ class OrganizationSocialLinksComponent < ViewComponent::Base
       nil
     end
 
-    def logo_for(host)
+    def provider_for(host)
+      return { name: "LinkedIn", logo: "logos/linkedin-logo.png" } if linkedin?(host)
+
       case host
-      when "github.com" then "logos/github-logo-circle.png"
-      when "facebook.com" then "logos/facebook-logo.png"
-      when "twitter.com", "x.com" then "logos/twitter-x.png"
-      when "linkedin.com" then "logos/linkedin-logo.png"
-      when "youtube.com"  then "logos/youtube-logo.png"
-      else "logos/link-logo.png"
+      when "github.com" then { name: "GitHub", logo: "logos/github-logo-circle.png" }
+      when "facebook.com" then { name: "Facebook", logo: "logos/facebook-logo.png" }
+      when "twitter.com", "x.com" then { name: "X", logo: "logos/twitter-x.png" }
+      when "youtube.com" then { name: "YouTube", logo: "logos/youtube-logo.png" }
+      else { name: "Website", logo: "logos/link-logo.png" }
       end
     end
-
-    def name_for(host)
-      case host
-      when "github.com" then "GitHub"
-      when "facebook.com" then "Facebook"
-      when "twitter.com", "x.com" then "X"
-      when "linkedin.com" then "LinkedIn"
-      when "youtube.com"  then "YouTube"
-      else "Website"
-      end
+    
+    def linkedin?(host)
+      host == "linkedin.com" || host.to_s.end_with?(".linkedin.com")
     end
 end
