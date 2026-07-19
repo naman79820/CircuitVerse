@@ -1,6 +1,6 @@
 <% content_for :title, @organization.name %>
 
-<%= render(OrganizationDashboardShellComponent.new(organization: @organization, active_tab: "overview")) do |shell| %>
+<%= render(OrganizationDashboardShellComponent.new(organization: @organization, active_tab: "overview", user_organizations: @user_organizations)) do |shell| %>
   <% shell.with_tab_content do %>
 
     <header class="org-dash-header">
