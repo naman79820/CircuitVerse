@@ -7,12 +7,14 @@ class OrganizationsController < ApplicationController
   before_action :check_show_access, only: %i[show overview members]
   before_action :check_edit_access, only: %i[settings update destroy]
 
+  PER_PAGE = 9
+
   # GET /organizations
   def index
     @organizations = if params[:explore].present?
-      Organization.where(private: false).order(created_at: :desc).paginate(page: params[:page], per_page: 9)
+      Organization.where(private: false).order(created_at: :desc).paginate(page: params[:page], per_page: PER_PAGE)
     else
-      current_user.organizations.order(created_at: :desc).paginate(page: params[:page], per_page: 9)
+      current_user.organizations.order(created_at: :desc).paginate(page: params[:page], per_page: PER_PAGE)
     end
   end
 
@@ -29,7 +31,11 @@ class OrganizationsController < ApplicationController
                            .select("groups.*, COUNT(group_members.id) AS group_members_count")
                            .group("groups.id")
                            .order(created_at: :desc)
-                           .paginate(page: params[:groups_page], per_page: 9, total_entries: @organization.groups.count)
+                           .paginate(
+                             page: params[:groups_page],
+                             per_page: PER_PAGE,
+                             total_entries: @organization.groups.count
+                           )
   end
 
   # GET /organizations/1/members

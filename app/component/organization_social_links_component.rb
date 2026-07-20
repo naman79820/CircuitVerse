@@ -39,7 +39,7 @@ class OrganizationSocialLinksComponent < ViewComponent::Base
       else { name: "Website", logo: "logos/link-logo.png" }
       end
     end
-    
+
     def linkedin?(host)
       host == "linkedin.com" || host.to_s.end_with?(".linkedin.com")
     end

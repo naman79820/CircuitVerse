@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Organization < ApplicationRecord
+  MAX_LINKS = 5
   extend FriendlyId
 
   friendly_id :name, use: :slugged
@@ -52,6 +53,6 @@ class Organization < ApplicationRecord
     def links_count_within_limit
       return if links.blank?
 
-      errors.add(:links, "cannot have more than 5 links") if links.size > 5
+      errors.add(:links, "cannot have more than #{MAX_LINKS} links") if links.size > MAX_LINKS
     end
 end
