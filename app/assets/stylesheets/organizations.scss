@@ -215,13 +215,13 @@
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(66, 185, 131, 0.18);
+    box-shadow: 0 8px 20px rgba($primary-green, 0.18);
     text-decoration: none;
     color: $gray-900;
   }
   &:focus-visible {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(66, 185, 131, 0.18);
+    box-shadow: 0 8px 20px rgba($primary-green, 0.18);
     outline: 2px solid $primary-green;
     outline-offset: 2px;
   }
