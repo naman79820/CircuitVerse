@@ -110,7 +110,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
       it "redirects to the created organization" do
         post :create, params: { organization: valid_attributes }
-        expect(response).to redirect_to(Organization.last)
+        expect(response).to redirect_to(overview_organization_path(Organization.last))
       end
     end
 
@@ -141,7 +141,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
         it "redirects to the organization" do
           patch :update, params: { id: organization.id, organization: new_attributes }
-          expect(response).to redirect_to(organization)
+          expect(response).to redirect_to(overview_organization_path(organization))
         end
       end
     end

@@ -69,7 +69,7 @@ class OrganizationsController < ApplicationController
 
     respond_to do |format|
       if create_organization
-        format.html { redirect_to @organization, notice: t(".success") }
+        format.html { redirect_to overview_organization_path(@organization), notice: t(".success") }
         format.json { render :show, status: :created, location: @organization }
       else
         flash.now[:alert] = t(".failure")
@@ -83,10 +83,10 @@ class OrganizationsController < ApplicationController
   def update
     respond_to do |format|
       if @organization.update(organization_params)
-        format.html { redirect_to @organization, notice: t(".success") }
+        format.html { redirect_to overview_organization_path(@organization), notice: t(".success") }
         format.json { render :show, status: :ok, location: @organization }
       else
-        format.html { render :edit }
+        format.html { render :settings, status: :unprocessable_content }
         format.json { render json: @organization.errors, status: :unprocessable_content }
       end
     end
