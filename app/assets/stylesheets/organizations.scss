@@ -327,7 +327,7 @@
     background: #e7f7ef;
 
     .org-switcher-meta {
-      color: $org-green-dark;
+      color: $secondary-green;
     }
   }
 }
@@ -340,7 +340,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: $org-green;
+  background: $primary-green;
   color: #fff;
   font-size: 12px;
   font-weight: 600;
@@ -370,7 +370,7 @@
 }
 
 .org-switcher-check {
-  color: $org-green;
+  color: $primary-green;
   font-size: 15px;
   margin-left: auto;
 }
@@ -381,14 +381,14 @@
   gap: 10px;
   padding: 9px 10px;
   border-radius: 8px;
-  color: $org-green;
+  color: $primary-green;
   font-weight: 600;
   font-size: 13px;
 
   &:hover,
   &:focus {
     background: #f3f4f6;
-    color: $org-green;
+    color: $primary-green;
   }
 }
 
