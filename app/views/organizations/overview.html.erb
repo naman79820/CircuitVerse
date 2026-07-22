@@ -3,65 +3,64 @@
 <%= render(OrganizationDashboardShellComponent.new(organization: @organization, active_tab: "overview")) do |shell| %>
   <% shell.with_tab_content do %>
 
-    <header class="org-dash-header">
-      <div class="org-dash-logo">
+    <header class="org-dash-header d-flex gap-4 align-items-start mb-4">
+      <div class="org-dash-logo d-flex align-items-center justify-content-center flex-shrink-0 overflow-hidden">
         <% if @organization.logo.attached? %>
           <%= image_tag @organization.logo, alt: "#{@organization.name} logo" %>
         <% else %>
-          <span class="org-dash-logo-fallback"><%= @organization.name.first.upcase %></span>
+          <span class="org-dash-logo-fallback fw-bold"><%= @organization.name.first.upcase %></span>
         <% end %>
       </div>
 
       <div class="org-dash-info">
-        <p class="org-dash-info-name"><%= @organization.name %></p>
+        <p class="org-dash-info-name fw-bold mb-2"><%= @organization.name %></p>
         <% if @organization.description.present? %>
-          <p class="org-dash-info-desc"><%= @organization.description %></p>
+          <p class="org-dash-info-desc lh-base mb-3"><%= @organization.description %></p>
         <% end %>
-        <div class="org-dash-info-meta">
-  <% has_links = @organization.links.present? && @organization.links.reject(&:blank?).any? %>
-  <% if has_links %>
-    <%= render(OrganizationSocialLinksComponent.new(links: @organization.links)) %>
-  <% end %>
-  <% if @organization.location.present? %>
-    <% if has_links %><span class="org-dash-meta-sep" aria-hidden="true"></span><% end %>
-    <span class="org-dash-location">
-      <i class="fa fa-map-marker-alt" aria-hidden="true"></i>
-      <%= @organization.location %>
-    </span>
-  <% end %>
-</div>
+        <div class="org-dash-info-meta d-flex align-items-center gap-3 flex-wrap">
+          <% has_links = @organization.links.present? && @organization.links.reject(&:blank?).any? %>
+          <% if has_links %>
+            <%= render(OrganizationSocialLinksComponent.new(links: @organization.links)) %>
+          <% end %>
+          <% if @organization.location.present? %>
+            <% if has_links %><span class="org-dash-meta-sep" aria-hidden="true"></span><% end %>
+            <span class="org-dash-location d-inline-flex align-items-center gap-2">
+              <i class="fa fa-map-marker-alt" aria-hidden="true"></i>
+              <%= @organization.location %>
+            </span>
+          <% end %>
+        </div>
       </div>
     </header>
 
-    <%# Groups section (your existing content) %>
     <section class="org-dash-section">
-      <div class="org-dash-section-head">
-        <h3 class="org-dash-section-title">Groups</h3>
+      <div class="org-dash-section-head d-flex align-items-center justify-content-between mb-3">
+        <h3 class="org-dash-section-title fw-semibold m-0">Groups</h3>
         <% if policy(@organization).admin_access? %>
-          <%= link_to new_group_path(organization_id: @organization.slug), class: "org-dash-add-btn" do %>
+          <%= link_to new_group_path(organization_id: @organization.slug), class: "org-dash-add-btn d-inline-flex align-items-center gap-1 text-decoration-none rounded-3 fw-medium" do %>
             <i class="fa fa-plus" aria-hidden="true"></i> New Group
           <% end %>
         <% end %>
       </div>
 
       <% if @groups.blank? %>
-        <div class="org-dash-empty">
-          <i class="fa fa-layer-group" aria-hidden="true"></i>
-          <p><%= t("organizations.show.no_groups") %></p>
+        <div class="org-dash-empty text-center">
+          <i class="fa fa-layer-group d-block mb-2" aria-hidden="true"></i>
+          <p class="m-0 fw-medium"><%= t("organizations.show.no_groups") %></p>
         </div>
       <% else %>
         <div class="org-dash-groups">
           <% @groups.each do |group| %>
-            <%= link_to group_path(group), class: "org-dash-group-card" do %>
-              <span class="org-dash-group-name"><%= group.name %></span>
-              <span class="org-dash-group-meta">
+            <%= link_to group_path(group), class: "org-dash-group-card d-flex flex-column justify-content-between text-decoration-none" do %>
+              <span class="org-dash-group-name fw-semibold"><%= group.name %></span>
+              <span class="org-dash-group-meta d-inline-flex align-items-center gap-1">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 <%= pluralize(group.group_members_count, "member") %>
               </span>
             <% end %>
           <% end %>
         </div>
-        <div class="org-index-pagination org-dash-pagination">
+        <div class="org-index-pagination org-dash-pagination mt-4">
           <%= will_paginate @groups, param_name: "groups_page", renderer: PaginateRenderer %>
         </div>
       <% end %>
