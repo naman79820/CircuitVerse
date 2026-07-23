@@ -10,7 +10,7 @@ class OrganizationDashboardShellComponent < ViewComponent::Base
   end
 
   def tab_class(tab)
-    "org-dash-tab #{'is-active' if @active_tab == tab}"
+  "org-dash-tab d-inline-flex align-items-center rounded-3 fw-medium text-decoration-none #{'is-active' if @active_tab == tab}"
   end
 
   def show_settings_tab?

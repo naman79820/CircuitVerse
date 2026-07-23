@@ -1,7 +1,7 @@
-<div class="org-dash mx-auto">
+<div class="org-dash mx-auto text-body">
   <h1 class="org-dash-name fw-semibold mb-3"><%= @organization.name %></h1>
 
-  <nav class="org-dash-tabs d-flex gap-2 flex-wrap" aria-label="Organization sections">
+  <nav class="d-flex gap-2 flex-wrap" aria-label="Organization sections">
     <%= link_to "Overview", overview_organization_path(@organization), class: tab_class("overview") %>
     <%= link_to "Members", members_organization_path(@organization), class: tab_class("members") %>
     <% if show_settings_tab? %>
