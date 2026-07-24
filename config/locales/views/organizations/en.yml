@@ -8,7 +8,7 @@ en:
     destroy:
       success: "Organization was successfully deleted."
     members:
-      page_title: "Members"
+      page_title: "Members - %{organization}"
   organization_members:
     create:
       success: "Member was successfully added."
