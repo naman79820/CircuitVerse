@@ -35,10 +35,10 @@
 
     <section>
       <div class="d-flex align-items-center justify-content-between mb-3">
-        <h3 class="org-dash-section-title fw-semibold m-0">Groups</h3>
+        <h3 class="org-dash-section-title fw-semibold m-0"><%= t(".groups_heading") %></h3>
         <% if policy(@organization).admin_access? %>
           <%= link_to new_group_path(organization_id: @organization.slug), class: "org-dash-add-btn d-inline-flex align-items-center gap-1 text-decoration-none rounded-3 fw-medium text-white" do %>
-            <i class="fa fa-plus" aria-hidden="true"></i> New Group
+            <i class="fa fa-plus" aria-hidden="true"></i> <%= t(".new_group_button") %>
           <% end %>
         <% end %>
       </div>
@@ -56,7 +56,7 @@
                 <span class="org-dash-group-name fw-semibold"><%= group.name %></span>
                 <span class="org-dash-group-meta d-inline-flex align-items-center gap-1">
                   <i class="fa fa-user" aria-hidden="true"></i>
-                  <%= pluralize(group.group_members_count, "member") %>
+                  <%= t(".member_count", count: group.group_members_count) %>
                 </span>
               <% end %>
             </div>

@@ -7,6 +7,12 @@ en:
       success: "Organization was successfully updated."
     destroy:
       success: "Organization was successfully deleted."
+    overview:
+      groups_heading: "Groups"
+      new_group_button: "New Group"
+      member_count:
+        one: "1 member"
+        other: "%{count} members"
     members:
       page_title: "Members - %{organization}"
     settings:
