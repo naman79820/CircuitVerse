@@ -36,7 +36,7 @@ class OrganizationSocialLinksComponent < ViewComponent::Base
       when "facebook.com" then { name: "Facebook", logo: "logos/facebook-logo.png" }
       when "twitter.com", "x.com" then { name: "X", logo: "logos/twitter-x.png" }
       when "youtube.com" then { name: "YouTube", logo: "logos/youtube-logo.png" }
-      else { name: "Website", logo: "logos/link-logo.png" }
+      else { name: I18n.t("organizations.social_links.website"), logo: "logos/link-logo.png" }
       end
     end
 

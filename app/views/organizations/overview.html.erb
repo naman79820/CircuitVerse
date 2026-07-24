@@ -6,7 +6,7 @@
     <header class="d-flex flex-column flex-sm-row gap-4 align-items-start mb-4">
       <div class="org-dash-logo d-flex align-items-center justify-content-center flex-shrink-0 overflow-hidden rounded-4 border bg-light">
         <% if @organization.logo.attached? %>
-          <%= image_tag @organization.logo, alt: "#{@organization.name} logo", class: "w-100 h-100 object-fit-cover" %>
+          <%= image_tag @organization.logo, alt: t(".logo_alt", organization: @organization.name), class: "w-100 h-100 object-fit-cover" %>
         <% else %>
           <span class="org-dash-logo-fallback fw-bold"><%= @organization.name.first.upcase %></span>
         <% end %>
