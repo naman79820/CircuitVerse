@@ -1,4 +1,4 @@
-<% content_for :title, "Settings - #{@organization.name}" %>
+<% content_for :title, t("organizations.settings.page_title", organization: @organization.name) %>
 
 <%= render(OrganizationDashboardShellComponent.new(organization: @organization, active_tab: "settings")) do |shell| %>
   <% shell.with_tab_content do %>

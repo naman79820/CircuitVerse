@@ -9,6 +9,8 @@ en:
       success: "Organization was successfully deleted."
     members:
       page_title: "Members - %{organization}"
+    settings:
+      page_title: "Settings - %{organization}"
   organization_members:
     create:
       success: "Member was successfully added."
